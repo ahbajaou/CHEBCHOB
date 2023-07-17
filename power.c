@@ -22,9 +22,11 @@ void add_argument(t_cmd *command, char *arg)
 {
     char **new_args = malloc((command->arg_count + 2) * sizeof(char*));
     int i = 0;
-    while (i < command->arg_count) 
+    while (i < command->arg_count)
+    {
         new_args[i] = command->args[i];
         i++;
+    }
     new_args[command->arg_count] = strdup(arg);
     new_args[command->arg_count + 1] = NULL; 
     free(command->args);
