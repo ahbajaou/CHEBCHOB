@@ -45,10 +45,7 @@ char *access_ve(char **path,t_cmd *cmd)
             current = ft_join2(path[i],"/");
             p = ft_join2(current,cmd->name);
             if (!access(p,F_OK))
-            {
-                printf("--%s---\n",p);
                 return (p);
-            }
             i++;
         }
         tmp = tmp->next;

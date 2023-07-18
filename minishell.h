@@ -6,6 +6,8 @@
 # include <unistd.h>
 # include <string.h>
 # include <fcntl.h>
+  #include <sys/types.h>
+       #include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -58,7 +60,7 @@ int  check_builting(t_cmd *cmd, ev_list **env);
 char *ft__strdup(char *str);
 ev_list *key_value(char *key, char *value);
 void addback(ev_list **list, ev_list *new);
-int    execve_cmd(t_cmd *cmd, ev_list **env);
+char    *execve_cmd(t_cmd *cmd, ev_list **env);
 char **get_path(ev_list **env);
 char *access_ve(char **path,t_cmd *cmd);
 char	*ft_join2(char *s1, char *s2);

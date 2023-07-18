@@ -24,8 +24,8 @@ int main(int ac,char **av,char **envp)
     (void)ac;
     (void)av;
     // int e_exit = 0;
-    t_cmd *cmd;
-    cmd = NULL;
+    // t_cmd *cmd;
+    // cmd = NULL;
     ev_list *env = _env(envp);
 
 

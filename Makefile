@@ -1,7 +1,7 @@
 
 NAMES = minishell 
  
-CFILES = main.c lexer.c power.c func.c exec.c exec_tools/*.c
+CFILES = main.c lexer.c power.c func.c exec.c exec_tools/*.c exec_tools/builtin/*.c
 
 CC = gcc -g
 
