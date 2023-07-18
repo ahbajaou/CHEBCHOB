@@ -62,6 +62,14 @@ ev_list *key_value(char *key, char *value);
 void addback(ev_list **list, ev_list *new);
 char    *execve_cmd(t_cmd *cmd, ev_list **env);
 char **get_path(ev_list **env);
+void ft_echo(t_cmd *cmd, ev_list *env);
+void    ft_unset(ev_list **env, t_cmd *cmd);
+void    ft_cd(t_cmd *cmd, ev_list *env);
+void ft_env(ev_list *env, t_cmd *cmd);
+int ft_len(char *str);
+void ft_pwd(void);
+void ft_exit(t_cmd *cmd);
+int ft_strcmp(char *s1, char *s2);
 char *access_ve(char **path,t_cmd *cmd);
 char	*ft_join2(char *s1, char *s2);
 #endif
