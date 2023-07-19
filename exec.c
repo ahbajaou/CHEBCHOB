@@ -3,16 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 22:46:38 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/07/17 03:04:02 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/07/19 17:52:24 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
 
+// void exec_cmd(t_cmd *cmd,ev_list **env)
+// {
+    // (void)env;
+    // (void)cmd;
+    // int i = 0;
+    // while(cmd != NULL) 
+    // {
+    //     printf("Command: %s\n", cmd->name);
+    //     i = 0;
+    //     if (cmd->args[0] == NULL)
+    //         printf("La commande n'a pas d'arguments.\n");
+    //     else 
+    //     {
+    //         printf("La commande a des arguments:\n");
+    //         while(cmd->args[i] != NULL)
+    //         {
+    //             printf("%s\n", cmd->args[i]);
+    //             i++;
+    //         }
+    //     }
+    //     cmd = cmd->next;
+    // }
 void exec_cmd(t_cmd *cmd,ev_list **env)
 {
     (void)env;
@@ -25,9 +47,9 @@ void exec_cmd(t_cmd *cmd,ev_list **env)
 
     while (tmp != NULL)
     {
+            printf("000here00\n");
         if (tmp->next->name == NULL)
         {
-            printf("000here00\n");
             flag = -1;
         }
         if (pipe(tmp->pip) == -1) {

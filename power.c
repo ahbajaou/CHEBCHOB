@@ -3,9 +3,12 @@
 t_cmd* create_command(char *name) 
 {
     t_cmd *command = malloc(sizeof(t_cmd));
-    command->name = strdup(name);
+    if (name != NULL) 
+        command->name = strdup(name);
+    else 
+        command->name = NULL;
     command->args = malloc(sizeof(char*));
-   command->args[0] = NULL;  
+    command->args[0] = NULL;
     command->arg_count = 0;
     command->redirection = REDIR_NONE;
     command->redirection_file = NULL;
@@ -29,11 +32,13 @@ void add_argument(t_cmd *command, char *arg)
         i++;
     }
     new_args[command->arg_count] = strdup(arg);
-    new_args[command->arg_count + 1] = NULL; 
+    new_args[command->arg_count + 1] = NULL;
     free(command->args);
     command->args = new_args;
     command->arg_count++;
 }
+
+
 
 void set_redirection(t_cmd *command, char *filename, t_redirection redirection) 
 {
@@ -41,12 +46,15 @@ void set_redirection(t_cmd *command, char *filename, t_redirection redirection)
     command->redirection_file = strdup(filename);
 }
 
-void handle_pipe(char **token, char **lasts, t_cmd **current) 
-{
-    *token = custom(NULL, " ", lasts);
-    (*current)->next = create_command(*token);
-    *current = (*current)->next;
-}
+// void handle_pipe(char **token, char **lasts, t_cmd **current) 
+// {
+//     // *token = custom(NULL, " ", lasts);
+//     // (*current)->next = create_command(*token);
+//     // *current = (*current)->next;
+  
+// }
+
+
 
 void handle_redirection(char **token, char **lasts, t_cmd *current) 
 {
@@ -137,6 +145,48 @@ void print_commands(t_cmd *head)
 // }
 
 
+// t_cmd* parse_input(char *input) 
+// {
+//     char *token, *lasts;
+//     token = custom(input, " ", &lasts);
+//     t_cmd *head = NULL, *current = NULL;
+//     while (token != NULL) 
+//     {
+//         // if (strcmp(token, " ") == 0 || strcmp(token, "") == 0) 
+//         // {
+//         //     token = custom(NULL, " ", &lasts);
+//         //     continue;
+//         // }
+//         if (strcmp(token, "|") == 0) 
+//             handle_pipe(&token, &lasts, &current);
+//         else if (token[0] == '>' || token[0] == '<') 
+//             handle_redirection(&token, &lasts, current);
+//         else 
+//         {
+//             if (head == NULL) 
+//             {
+//                 head = create_command(token);
+//                 current = head;
+//             } else 
+//             {
+//                 add_argument(current, token);
+//             }
+//         }
+//         token = custom(NULL, " ", &lasts);
+//     }
+//     return head;
+// }
+
+void handle_pipe(char **token, char **lasts, t_cmd **current) 
+{
+    *token = custom(NULL, " ", lasts);
+    t_cmd *new_command = create_command(*token);
+    (*current)->next = new_command;
+    *current = new_command;
+}
+
+
+
 t_cmd* parse_input(char *input) 
 {
     char *token, *lasts;
@@ -154,12 +204,17 @@ t_cmd* parse_input(char *input)
             {
                 head = create_command(token);
                 current = head;
-            } else 
+            }   
+            else 
             {
-                add_argument(current, token);
+                if (current->name == NULL)
+                    current->name = strdup(token);
+                else
+                    add_argument(current, token);
             }
         }
         token = custom(NULL, " ", &lasts);
     }
     return head;
 }
+
