@@ -5,6 +5,7 @@ t_cmd* create_command(char *name)
     t_cmd *command = malloc(sizeof(t_cmd));
     command->name = strdup(name);
     command->args = malloc(sizeof(char*));
+   command->args[0] = NULL;  
     command->arg_count = 0;
     command->redirection = REDIR_NONE;
     command->redirection_file = NULL;
