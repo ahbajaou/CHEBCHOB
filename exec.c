@@ -53,7 +53,7 @@ void exec_cmd(t_cmd *cmd,ev_list **env)
     if (cnt_pipe == 1)
     {
         char *p = execve_cmd(tmp,env);
-        cmd->args = exec_args(tmp,env);
+        // cmd->args = exec_args(tmp,env);
 			if (check_builting(tmp, env) == 1)
             {
 	            return ;
@@ -68,7 +68,8 @@ void exec_cmd(t_cmd *cmd,ev_list **env)
                 }
                 if (tmp->pid == 0)
                 {
-                    if ( execve(p,tmp->args,NULL) == -1)
+                    char *args[] = {cmd->name,cmd->args[0], NULL};
+                     if ( execve(p,args,NULL) == -1)
                     {
                         printf("execve fails \n");
                         exit(0);
@@ -108,7 +109,8 @@ void exec_cmd(t_cmd *cmd,ev_list **env)
             }
             else
             {
-                if ( execve(p,tmp->args,NULL) == -1)
+                    char *args1[] = {cmd->name,cmd->args[0], NULL};
+                if ( execve(p,args1,NULL) == -1)
                 {
                     printf("execve fails \n");
                     exit(0);
