@@ -28,8 +28,8 @@ int main(int ac,char **av,char **envp)
     // cmd = NULL;
     ev_list *env = _env(envp);
 
-
-
+    t_cmd *commands = NULL;
+    (void)env;
     while(1)
     {
         char *str = readline("minishell: ");
@@ -41,9 +41,10 @@ int main(int ac,char **av,char **envp)
             continue;
         }
         add_history(str);
-        t_cmd *commands = parse_input(str);
+        commands = parse_input(str);
         print_commands(commands);
         exec_cmd(commands,&env);
+        // printf("--%s---\n",commands->args[0]);
     }
     return 0;
 }
