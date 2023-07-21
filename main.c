@@ -43,7 +43,7 @@ int main(int ac,char **av,char **envp)
         add_history(str);
         commands = parse_input(str);
         print_commands(commands);
-        exec_cmd(commands,&env);
+        exec_cmd(commands,&env,envp);
         // printf("--%s---\n",commands->args[0]);
     }
     return 0;

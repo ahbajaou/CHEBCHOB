@@ -13,27 +13,7 @@
 
 #include "minishell.h"
 
-char **exec_args(t_cmd *cmd,ev_list **env)
-{
-    (void)env;
-    (void)cmd;
-    int i = 0;
-    while(cmd != NULL) 
-    {
-        i = 0;
-        if (cmd->args[0] == NULL)
-            return (cmd->args);
-        else
-        {
-            while(cmd->args[i] != NULL)
-                i++;
-            return (cmd->args);
-        }
-        cmd = cmd->next;
-    }
-    return (NULL);
-}
-void exec_cmd(t_cmd *cmd,ev_list **env)
+void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
 {
     (void)env;
     (void)cmd;
@@ -53,7 +33,6 @@ void exec_cmd(t_cmd *cmd,ev_list **env)
     if (cnt_pipe == 1)
     {
         char *p = execve_cmd(tmp,env);
-        // cmd->args = exec_args(tmp,env);
 			if (check_builting(tmp, env) == 1)
             {
 	            return ;
@@ -69,7 +48,7 @@ void exec_cmd(t_cmd *cmd,ev_list **env)
                 if (tmp->pid == 0)
                 {
                     char *args[] = {cmd->name,cmd->args[0], NULL};
-                     if ( execve(p,args,NULL) == -1)
+                     if ( execve(p,args,envp) == -1)
                     {
                         printf("execve fails \n");
                         exit(0);
@@ -91,7 +70,7 @@ void exec_cmd(t_cmd *cmd,ev_list **env)
             return ;
         }
         char *p = execve_cmd(tmp,env);
-        cmd->args = exec_args(tmp,env);
+        // cmd->args = exec_args(tmp,env);
         if (tmp->pid == 0)
         { 
             
@@ -110,7 +89,7 @@ void exec_cmd(t_cmd *cmd,ev_list **env)
             else
             {
                     char *args1[] = {cmd->name,cmd->args[0], NULL};
-                if ( execve(p,args1,NULL) == -1)
+                if ( execve(p,args1,envp) == -1)
                 {
                     printf("execve fails \n");
                     exit(0);

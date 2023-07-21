@@ -55,7 +55,7 @@ char* custom_str(char* str, char* delims);
 char	**ft_split( char *s, char c);
 void addback(ev_list **list, ev_list *new);
 ev_list *key_value(char *key, char *value);
-void    exec_cmd(t_cmd *cmd,ev_list **env);
+void exec_cmd(t_cmd *cmd,ev_list **env,char **envp);
 int  check_builting(t_cmd *cmd, ev_list **env);
 char *ft__strdup(char *str);
 ev_list *key_value(char *key, char *value);
