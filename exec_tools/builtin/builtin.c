@@ -48,7 +48,7 @@ int check_builting(t_cmd *cmd, ev_list **env)
     }
     if (ft_strcmp("exit", cmd->name) == 0)
     {
-        ft_exit(cmd);
+        ft_exit();
         return (1);
     }
     return (0);

@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-char    *execve_cmd(t_cmd *cmd, ev_list **env)
+char    *execve_cmd(t_cmd *cmd, ev_list *env)
 {
 
     char **path = get_path(env);

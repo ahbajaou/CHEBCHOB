@@ -41,11 +41,9 @@ void        delet_unset(ev_list **env,char *key)
 }
 void    ft_unset(ev_list **env, t_cmd *cmd)
 {
-    (void)env;
-    (void)cmd;
     ev_list *tmp;
     tmp = (*env);
-    int i = 1;
+    int i = 0;
 
     while (tmp)
     {

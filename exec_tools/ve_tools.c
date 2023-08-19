@@ -12,10 +12,10 @@
 
 #include "../minishell.h"
 
-char **get_path(ev_list **env)
+char **get_path(ev_list *env)
 {
     ev_list *tmp;
-    tmp = (*env);
+    tmp = (env);
     char *path;
     char **spl;
     while (tmp)
@@ -24,6 +24,7 @@ char **get_path(ev_list **env)
                 path = ft__strdup(tmp->value);
         tmp = tmp->next;
     }
+    free(tmp);
     spl = ft_split(path, ':');
     return (spl);
 }
@@ -50,5 +51,6 @@ char *access_ve(char **path,t_cmd *cmd)
         }
         tmp = tmp->next;
     }
+    free(tmp);
     return (NULL);
 }

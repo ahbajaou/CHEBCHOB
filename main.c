@@ -26,10 +26,10 @@ int main(int ac,char **av,char **envp)
     // int e_exit = 0;
     // t_cmd *cmd;
     // cmd = NULL;
-    ev_list *env = _env(envp);
 
     t_cmd *commands = NULL;
-    (void)env;
+    // (void)env;
+    ev_list *env = _env(envp);
     while(1)
     {
         char *str = readline("minishell: ");

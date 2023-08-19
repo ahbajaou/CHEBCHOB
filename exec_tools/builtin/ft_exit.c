@@ -1,9 +1,7 @@
 
 #include "../../minishell.h"
 
-void ft_exit(t_cmd *cmd)
+void ft_exit(void)
 {
-
-    if (ft_strcmp(cmd->name, "exit") == 0)
-        exit(0);
+        exit(1);
 }
