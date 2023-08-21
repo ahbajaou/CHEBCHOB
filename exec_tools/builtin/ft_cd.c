@@ -21,7 +21,7 @@ void    update_path(ev_list *env, char *old,char *path,char *new)
         }
         tmp = tmp->next;
     }
-    free(tmp);
+    // free(tmp);
 }
 void    ft_cd(t_cmd *cmd, ev_list *env)
 {

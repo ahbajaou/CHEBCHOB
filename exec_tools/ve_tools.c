@@ -24,9 +24,9 @@ char **get_path(ev_list *env)
                 path = ft__strdup(tmp->value);
         tmp = tmp->next;
     }
-    free(tmp);
     spl = ft_split(path, ':');
     free(path);
+    free(tmp);
     return (spl);
 }
 

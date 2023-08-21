@@ -42,7 +42,7 @@ void    print_echo(char **str,int i,int flag)
         i++;
     }
     printf("%s",tmp);
-    free(tmp);
+    // free(tmp);
     if (flag == 1)
         printf("\n");
 }

@@ -19,7 +19,7 @@ void print_env(ev_list **env, int flag)
             printf("declare -x %s=%s\n", tmp->key, tmp->value);
         tmp = tmp->next;
     }
-    free(tmp);
+    // free(tmp);
 }
 
 void delet_expo(ev_list **env, char *key,char *value)
@@ -104,7 +104,7 @@ void add_expo(char **str, ev_list **env)
 
         i++;
     }
-    free(tmp);
+    // free(tmp);
 }
 void ft_env(ev_list *env, t_cmd *cmd)
 {
@@ -119,9 +119,11 @@ void ft_env(ev_list *env, t_cmd *cmd)
     if (flag == -1)
     {
         add_expo(cmd->args, &env);
+        // exit(0);
     }
     if (flag == 0 || flag == 1)
     {
         print_env(&env, flag);
+        // exit(0);
     }
 }

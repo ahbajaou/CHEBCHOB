@@ -52,14 +52,10 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
             if (i + 1 != cnt_pipe)
                 dup2(fd[1],STDOUT_FILENO);
             close(fd[0]);
-			// if (access(p,F_OK))
-            // {
-            //     printf("insede buitin\n");
-            // }
-            // check_builting(cmd, env);  
             if (check_builting(cmd,env) != 1)
                 execve(p,args1,envp);
-            exit(0);
+            if (i + 1 != cnt_pipe)
+                exit(0);
 		}
             wait(NULL);
             close(fd[1]);
@@ -67,5 +63,6 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
 	    cmd = cmd->next;
         i++;
     }
+    // free(p);
 	wait(NULL);
 }

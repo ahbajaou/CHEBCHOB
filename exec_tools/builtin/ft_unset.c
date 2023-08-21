@@ -34,7 +34,7 @@ void        delet_unset(ev_list **env,char *key)
             (*env) = (*env)->next;
             free(tmp->key);
             free(tmp->value);
-            free(tmp);
+            // free(tmp);
         }
 
     }
@@ -60,5 +60,5 @@ void    ft_unset(ev_list **env, t_cmd *cmd)
         }
         tmp = tmp->next;
     }
-    free(tmp);
+    // free(tmp);
 }

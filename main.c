@@ -2,7 +2,16 @@
 
 #include "minishell.h"
 
-
+void    free4free(char **tmp)
+{
+    int i = 0;
+    while (tmp[i])
+    {
+        free(tmp[i]);
+        i++;
+    }
+    free(tmp);
+}
 ev_list	*_env(char **envp)
 {
     ev_list *env = NULL;
@@ -14,9 +23,9 @@ ev_list	*_env(char **envp)
     {
         tmp = ft_split(envp[i], '=');
         addback(&env,key_value(tmp[0], tmp[1]));
-        free(tmp);
         i++;
     }
+    free4free(tmp);
     // free4free(tmp);
     return(env);
 }
@@ -46,6 +55,7 @@ int main(int ac,char **av,char **envp)
         commands = parse_input(str);
         print_commands(commands);
         exec_cmd(commands,&env,envp);
+        // system("leaks minishell");
         // printf("--%s---\n",commands->args[0]);
     }
     return 0;
