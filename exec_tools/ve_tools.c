@@ -26,6 +26,7 @@ char **get_path(ev_list *env)
     }
     free(tmp);
     spl = ft_split(path, ':');
+    free(path);
     return (spl);
 }
 
@@ -49,8 +50,12 @@ char *access_ve(char **path,t_cmd *cmd)
                 return (p);
             i++;
         }
+        // free(current);
         tmp = tmp->next;
     }
+            // free(current);
     free(tmp);
+    // free(path);
+    // free(p);
     return (NULL);
 }

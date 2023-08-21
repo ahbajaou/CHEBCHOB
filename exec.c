@@ -26,6 +26,7 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
     // int prev_pipe[2] = {0,1};
     int fdd = 0;
     tmp = cmd;
+    char *p;
     while (tmp != NULL)
     {
         tmp = tmp->next;
@@ -34,7 +35,7 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
     int i = 0;
     while (i < cnt_pipe)
     {
-        char *p = execve_cmd(cmd,*env);
+        p = execve_cmd(cmd,*env);
         char *args1[] = {cmd->name,cmd->args[0], NULL};
         if (pipe(fd) == -1) {
             printf("pipe fails\n");
@@ -54,11 +55,11 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
 			// if (access(p,F_OK))
             // {
             //     printf("insede buitin\n");
-            //     check_builting(cmd, env);
             // }
+            // check_builting(cmd, env);  
             if (check_builting(cmd,env) != 1)
                 execve(p,args1,envp);
-
+            exit(0);
 		}
             wait(NULL);
             close(fd[1]);
@@ -66,6 +67,5 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
 	    cmd = cmd->next;
         i++;
     }
-    // waitpid(cmd->pid,&e_exit,0);
 	wait(NULL);
 }

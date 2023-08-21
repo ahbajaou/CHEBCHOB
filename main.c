@@ -2,6 +2,7 @@
 
 #include "minishell.h"
 
+
 ev_list	*_env(char **envp)
 {
     ev_list *env = NULL;
@@ -13,9 +14,10 @@ ev_list	*_env(char **envp)
     {
         tmp = ft_split(envp[i], '=');
         addback(&env,key_value(tmp[0], tmp[1]));
+        free(tmp);
         i++;
     }
-    free(tmp);
+    // free4free(tmp);
     return(env);
 }
 

@@ -12,6 +12,15 @@
 
 #include "../minishell.h"
 
+void    free4free(char **str)
+{
+    int i = 0;
+    while (str[i])
+    {
+        free(str[i]);
+        i++;
+    }
+}
 char    *execve_cmd(t_cmd *cmd, ev_list *env)
 {
 
@@ -19,5 +28,7 @@ char    *execve_cmd(t_cmd *cmd, ev_list *env)
     char *p = access_ve(path,cmd);
         if (!access(p,F_OK))
             return (p);
+    free(p);
+    // free4free(path);
     return (NULL);
 }
