@@ -39,26 +39,13 @@ void        delet_unset(ev_list **env,char *key)
 
     }
 }
+
 void    ft_unset(ev_list **env, t_cmd *cmd)
 {
-    ev_list *tmp;
-    tmp = (*env);
     int i = 0;
-
-    while (tmp)
+    while (cmd->args[i])
     {
-        while (cmd->args[i])
-        {
-            if (ft_strcmp(cmd->args[i], tmp->key) == 0)
-            {
-                delet_unset(env,tmp->key);
-                return ;
-            }
-            else
-                break;
-            i++;
-        }
-        tmp = tmp->next;
+        delet_unset(env,cmd->args[i]);
+        i++;
     }
-    // free(tmp);
 }

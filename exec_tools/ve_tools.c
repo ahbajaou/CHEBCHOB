@@ -20,13 +20,14 @@ char **get_path(ev_list *env)
     char **spl;
     while (tmp)
     {
-        if (strcmp(tmp->key, "PATH") == 0)
+        if (ft_strcmp(tmp->key, "PATH") == 0)
                 path = ft__strdup(tmp->value);
         tmp = tmp->next;
     }
     spl = ft_split(path, ':');
     free(path);
     free(tmp);
+    tmp = NULL;
     return (spl);
 }
 
@@ -50,12 +51,9 @@ char *access_ve(char **path,t_cmd *cmd)
                 return (p);
             i++;
         }
-        // free(current);
         tmp = tmp->next;
     }
-            // free(current);
     free(tmp);
-    // free(path);
-    // free(p);
+    tmp = NULL;
     return (NULL);
 }

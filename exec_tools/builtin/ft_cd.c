@@ -9,40 +9,30 @@ void    update_path(ev_list *env, char *old,char *path,char *new)
     while (tmp)
     {
         if (ft_strcmp(old, tmp->key) == 0)
-        {
             tmp->value = ft__strdup(new);
-            // printf("--ols === %s----\n",tmp->value);
-         //   exit(0);
-        }
         if (ft_strcmp(path, tmp->key) == 0)
-        {
             tmp->value = ft__strdup(new);
-            // printf("--new === %s----\n",tmp->value);
-        }
         tmp = tmp->next;
     }
-    // free(tmp);
+    free(tmp);
+}
+
+void _exec_cd(ev_list *env,char *name)
+{
+    char cwd[256];
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+        update_path(env,"OLDPWD",NULL,cwd);
+    chdir(name);
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+        update_path(env,NULL,"PWD",cwd);
 }
 void    ft_cd(t_cmd *cmd, ev_list *env)
 {
- 
-    char cwd[256];
-
-        if (ft_strcmp("cd", cmd->name) == 0 && !cmd->args[0])
-        {
-            if (getcwd(cwd, sizeof(cwd)) != NULL)
-                update_path(env,"OLDPWD",NULL,cwd);
-            chdir("..");
-            if (getcwd(cwd, sizeof(cwd)) != NULL)
-                update_path(env,NULL,"PWD",cwd);
-        }
-        else
-        {
-            if (getcwd(cwd, sizeof(cwd)) != NULL)
-                update_path(env,"OLDPWD",NULL,cwd);
-            chdir(cmd->args[0]);
-            if (getcwd(cwd, sizeof(cwd)) != NULL)
-                update_path(env,NULL,"PWD",cwd);
-        }
+    if (ft_strcmp("..", cmd->args[0]) == 0)
+        _exec_cd(env,"..");
+    else if (ft_strcmp("~", cmd->args[0]) == 0 || !cmd->args[0])
+        _exec_cd(env,getenv("HOME"));
+    else
+        _exec_cd(env,cmd->args[0]);
  
 }

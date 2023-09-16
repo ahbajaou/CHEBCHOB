@@ -37,11 +37,3 @@ void free_tokens(char** tokens)
     }
     free(tokens);
 }
-// int main() {
-//     char input[] = "ls -l -a | grep .c > file.txt";
-//     char** tokens = lexer(input);
-//     for (int i = 0; tokens[i] != NULL; i++)
-//         printf("Token %d: %s\n", i, tokens[i]);
-//     free_tokens(tokens);
-//     return 0;
-// }

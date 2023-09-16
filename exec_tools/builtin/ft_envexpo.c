@@ -2,6 +2,21 @@
 #include "../../minishell.h"
 
 
+
+char *get_sub(char *str)
+{
+    int i = 0;
+    while (str[i])
+    {
+        if (str[i] == '=')
+        {
+            i++;
+            return (str + i);
+        }
+        i++;
+    }
+    return (str);
+}
 void print_env(ev_list **env, int flag)
 {
     ev_list *tmp;
@@ -19,7 +34,7 @@ void print_env(ev_list **env, int flag)
             printf("declare -x %s=%s\n", tmp->key, tmp->value);
         tmp = tmp->next;
     }
-    // free(tmp);
+    free(tmp);
 }
 
 void delet_expo(ev_list **env, char *key,char *value)
@@ -29,30 +44,27 @@ void delet_expo(ev_list **env, char *key,char *value)
     tmp = *env;
     (void)value;
     ev_list *perv;
-            if (env != NULL)
+    if (env != NULL)
+    {
+        if (tmp->key != key)
+        {
+            while (tmp->next != NULL)
             {
-                if (tmp->key != key)
+                if (ft_strcmp(tmp->next->key, key) == 0)
                 {
-                    while (tmp->next != NULL)
-                    {
-                        if (ft_strcmp(tmp->next->key, key) == 0)
-                        {
-
-                            perv = tmp->next;
-                            tmp->next = tmp->next->next;
-                            free(perv);
-                            return ;
-                         }
-                        tmp = tmp->next;
-                    }
+                    perv = tmp->next;
+                    tmp->next = tmp->next->next;
+                    free(perv);
+                    return ;
                 }
+                tmp = tmp->next;
             }
+        }
+    }
 
 }
 int check_double(ev_list **env, char *key, char *value)
 {
-    (void)env;
-    (void)value;
 
     ev_list *tmp;
     tmp = *env;
@@ -82,9 +94,9 @@ void expo_pars(char *str,char *str1,ev_list **env)
             printf("export: `%s=%s': not a valid identifier\n",str, str1);
             return ;
         }
-        addback(env, key_value(str, str1));
         i++;
     }
+    addback(env, key_value(str, str1));
 }
 void add_expo(char **str, ev_list **env)
 {
@@ -96,15 +108,11 @@ void add_expo(char **str, ev_list **env)
     while (str[i])
     {
         tmp = ft_split(str[i], '=');
-        if (check_double(env, tmp[0], tmp[1]))
-        {
-            // printf("--aftedouble---\n");
-            expo_pars(tmp[0], tmp[1],env);
-        }
-
+        if (check_double(env, tmp[0], get_sub(str[i])))
+            expo_pars(tmp[0], get_sub(str[i]),env);
         i++;
     }
-    // free(tmp);
+    free(tmp);
 }
 void ft_env(ev_list *env, t_cmd *cmd)
 {
@@ -117,13 +125,7 @@ void ft_env(ev_list *env, t_cmd *cmd)
     if (ft_strcmp(cmd->name, "env") == 0)
         flag = 0;
     if (flag == -1)
-    {
         add_expo(cmd->args, &env);
-        // exit(0);
-    }
     if (flag == 0 || flag == 1)
-    {
         print_env(&env, flag);
-        // exit(0);
-    }
 }

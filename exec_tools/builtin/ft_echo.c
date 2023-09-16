@@ -2,37 +2,10 @@
 
 #include "../../minishell.h"
 
-char *ft_supstr(char *str,int start,int end)
-{
-    int i;
-    char *new;
-
-    i = 0;
-    new = malloc(sizeof(char) * ft_len(str));
-    while (start < end)
-    {
-        new[i] = str[start];
-        i++;
-        start++;
-    }
-    new[i] = '\0';
-    return (new);
-}
 void    print_echo(char **str,int i,int flag)
 {
     char *tmp;
-    // int j;
-
-    // j = 0;
     tmp = NULL;
-    // if (str[i][j] == '"')
-    // {
-    //     char *new = ft_supstr(str[i],j + 1,ft_len(str[i]) - 1);
-    //     // printf("--%s---\n",new);
-    //     str[i] = new;
-    //     // exit(0);
-    // }
-    // printf("---%d----\n",flag);
     while (str[i])
     {
         tmp = ft_join2(tmp,str[i]);
@@ -42,7 +15,7 @@ void    print_echo(char **str,int i,int flag)
         i++;
     }
     printf("%s",tmp);
-    // free(tmp);
+    free(tmp);
     if (flag == 1)
         printf("\n");
 }
@@ -66,7 +39,6 @@ int handel_n(char **str)
         }
         if ((j == 0 && str[i][j] != '-'))
         {
-
             print_echo(str,i,flag);
             return (0);
         }
@@ -85,5 +57,5 @@ void ft_echo(t_cmd *cmd, ev_list *env)
 {
     (void)env;
         if (handel_n(cmd->args) != 1)
-            return ;
+            perror("echo");
 }

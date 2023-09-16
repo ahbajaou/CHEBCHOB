@@ -1,0 +1,11 @@
+Makefile
+dollar.c
+exec.c
+exec_tools
+func.c
+lexer.c
+main.c
+minishell
+minishell.dSYM
+minishell.h
+power.c
