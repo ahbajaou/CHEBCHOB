@@ -46,7 +46,14 @@ int handel_n(char **str)
         while (str[i][j] == 'n')
             j++;
         if (str[i][j] != 'n' || str[i][j] != 0)
+        {
+            if (str[i][j] != 0)
+            {
+                print_echo(str,i,0);           
+                return (0);
+            }
             flag = 0;
+        }
         if (str[i + 1] == NULL)
             flag = 0;
         i++;
@@ -57,5 +64,5 @@ void ft_echo(t_cmd *cmd, ev_list *env)
 {
     (void)env;
         if (handel_n(cmd->args) != 1)
-            perror("echo");
+            exit(0);
 }

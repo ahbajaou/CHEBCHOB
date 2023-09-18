@@ -34,7 +34,6 @@ void        delet_unset(ev_list **env,char *key)
             (*env) = (*env)->next;
             free(tmp->key);
             free(tmp->value);
-            // free(tmp);
         }
 
     }

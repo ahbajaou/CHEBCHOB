@@ -18,24 +18,24 @@ t_cmd* create_command(char *name)
 
 void add_argument(t_cmd *command, char *arg) 
 {
-    char **new_args = malloc((command->arg_count + 2) * sizeof(char*));
-    int i = 0;
-    while (i < command->arg_count)
-    {
-        new_args[i] = command->args[i];
-        i++;
-    }
-    new_args[command->arg_count] = strdup(arg);
-    new_args[command->arg_count + 1] = NULL;
-    free(command->args);
-    command->args = new_args;
+    command->args = realloc(command->args, (command->arg_count + 2) * sizeof(char*));
+    command->args[command->arg_count] = strdup(arg);
     command->arg_count++;
+    command->args[command->arg_count] = NULL;
 }
 
 void set_redirection(t_cmd *command, char *filename, t_redirection redirection) 
 {
+    if (!command) {
+        fprintf(stderr, "Erreur : la commande est NULL.\n");
+        return;
+    }
     command->redirection = redirection;
-    command->redirection_file = strdup(filename);
+    if (filename) {
+        command->redirection_file = strdup(filename);
+    } else {
+        command->redirection_file = NULL;
+    }
 }
 
 void handle_redirection(char **token, char **lasts, t_cmd *current) 
@@ -46,6 +46,10 @@ void handle_redirection(char **token, char **lasts, t_cmd *current)
     {
         strcat(redirection, *token); // Combine the tokens
         *token = custom(NULL, " ", lasts);
+    }
+    if (!*token) {
+        fprintf(stderr, "Erreur : Redirection sans fichier cible.\n");
+        return;
     }
     if (strcmp(redirection, ">") == 0)
         set_redirection(current, *token, REDIR_OUTPUT);
@@ -99,8 +103,16 @@ t_cmd* parse_input(char *input)
     char *token, *lasts;
     token = custom(input, " ", &lasts);
     t_cmd *head = NULL, *current = NULL;
+
     while (token != NULL) 
     {
+        if (!current) 
+        {
+            current = create_command(NULL);
+            if (!head) 
+                head = current;
+        }
+
         if (strcmp(token, "|") == 0) 
             handle_pipe(&token, &lasts, &current);
         else if (token[0] == '>' || token[0] == '<') 

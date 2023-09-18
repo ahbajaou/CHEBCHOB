@@ -1,22 +1,6 @@
 
 #include "../../minishell.h"
 
-
-
-char *get_sub(char *str)
-{
-    int i = 0;
-    while (str[i])
-    {
-        if (str[i] == '=')
-        {
-            i++;
-            return (str + i);
-        }
-        i++;
-    }
-    return (str);
-}
 void print_env(ev_list **env, int flag)
 {
     ev_list *tmp;
@@ -84,6 +68,7 @@ int check_double(ev_list **env, char *key, char *value)
     }
     return (1);
 }
+
 void expo_pars(char *str,char *str1,ev_list **env)
 {
     int i = 0;
@@ -91,7 +76,7 @@ void expo_pars(char *str,char *str1,ev_list **env)
     {
         if (!((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')))
         {
-            printf("export: `%s=%s': not a valid identifier\n",str, str1);
+            printf("export : not a valid identifier : %s\n",str);
             return ;
         }
         i++;
@@ -105,14 +90,20 @@ void add_expo(char **str, ev_list **env)
 
     i = 0;
     tmp = NULL;
+    
+    if (str[i][0] == '=')
+    {
+        printf("export : not a valid identifier : %s\n",str[i]);
+        return ;
+    }
     while (str[i])
     {
         tmp = ft_split(str[i], '=');
-        if (check_double(env, tmp[0], get_sub(str[i])))
-            expo_pars(tmp[0], get_sub(str[i]),env);
+        if (check_double(env, tmp[0], tmp[1]))
+            expo_pars(tmp[0], tmp[1],env);
         i++;
     }
-    free(tmp);
+    free4free(tmp);
 }
 void ft_env(ev_list *env, t_cmd *cmd)
 {

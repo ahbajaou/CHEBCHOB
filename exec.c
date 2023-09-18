@@ -111,8 +111,7 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
             herdoc(cmd);
             if (check_builting(cmd,env) != 1)
             {
-                execve(execve_cmd(cmd,*env),args1,envp);
-                perror("execve");
+                execve(execve_cmd(cmd,*env),args1,(char **)env);
                 exit(1);
             }
             if (cmd->next != NULL)

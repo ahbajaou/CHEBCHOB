@@ -12,17 +12,27 @@
 
 #include "../minishell.h"
 
-char **get_path(ev_list *env)
+char **get_path(ev_list *env,t_cmd *cmd)
 {
     ev_list *tmp;
+    (void)cmd;
     tmp = (env);
+
     char *path;
+    path = NULL;
     char **spl;
     while (tmp)
     {
         if (ft_strcmp(tmp->key, "PATH") == 0)
+        {
                 path = ft__strdup(tmp->value);
+        }
         tmp = tmp->next;
+    }
+    if (!path)
+    {
+        printf("No such file or directory\n");
+        return NULL;
     }
     spl = ft_split(path, ':');
     free(path);
@@ -36,11 +46,12 @@ char *access_ve(char **path,t_cmd *cmd)
 
     t_cmd *tmp;
 
-    (void)path;
     tmp = cmd;
     int i = 0;
     char *current;
     char *p;
+    if (!path)
+        return NULL;
     while (tmp)
     {
         while (path[i])

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_join2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 03:17:21 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/07/17 03:17:47 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/17 00:03:23 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,11 @@ char	*ft_join2(char *s1, char *s2)
 		}
 		free((char *)s1);
 	}
-	while (s2[j])
-		str[i++] = s2[j++];
+	if (s2) 
+	{
+		while (s2[j])
+			str[i++] = s2[j++];
+	}
 	str[i] = '\0';
 	return (str);
 }

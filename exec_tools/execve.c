@@ -12,26 +12,18 @@
 
 #include "../minishell.h"
 
-void _free(char **path)
-{
-    // int i = 0;
-    int cnt = 0;
-    while (path[cnt])
-    {
-        free(path[cnt]);
-        cnt++;
-    }
-    free(path[cnt]);
-
-}
 
 char    *execve_cmd(t_cmd *cmd, ev_list *env)
 {
 
-    char **path = get_path(env);
+    char **path = get_path(env,cmd);
     char *p = access_ve(path,cmd);
         if (!access(p,F_OK))
+        {
+            // free4free(path);
             return (p);
+        }
+    // free4free(path);
     free(p);
     return (NULL);
 }
