@@ -29,16 +29,25 @@ ev_list	*_env(char **envp)
     return(env);
 }
 
+void    sighandler(int sig)
+{
+    if (sig == SIGINT)
+        exit(0);
+    if (sig == SIGQUIT)
+        exit(0);
+}
 int main(int ac,char **av,char **envp)
 {
     (void)ac;
     (void)av;
 
     t_cmd *commands = NULL;
-    // (void)env;
+    // (void)env;a
     ev_list *env = _env(envp);
     while(1)
     {
+        signal(SIGINT,sighandler);
+        signal(SIGQUIT,sighandler);
         char *str = readline("minishell: ");
         if (!str)
             exit(1);
