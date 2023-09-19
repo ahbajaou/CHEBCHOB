@@ -36,15 +36,35 @@ void redir(t_cmd *cmd)
     }
 }
 
-void    herdoc(t_cmd *cmd)
+char *herpath(ev_list **env,char *key,char *file_name)
 {
+    ev_list *tmp;
 
-
-    char *file_name = "outfile.txt";
+    tmp = *env;
+    while (tmp)
+    {
+        if (ft_strcmp(tmp->key,key) == 0)
+            {
+               
+                char *current = ft_join2(tmp->value,"/");
+                char *p = ft_join2(current,file_name);
+                return (p);
+            }
+            tmp = tmp->next;
+    }
+    free(tmp);
+    return NULL;
+}
+void    herdoc(t_cmd *cmd,ev_list **env)
+{
+    (void)env;
+   
     if (cmd->redirection == 4)
     {
+        char *file_name = "outfile.txt";
         char *typ;
         int rd;
+        char *p = herpath(env,"PWD",file_name);
         cmd->herd = open(file_name,O_CREAT | O_RDWR , 0644);
         size_t size = strlen(cmd->redirection_file);
         typ = malloc(sizeof(char *)* size);
@@ -54,7 +74,11 @@ void    herdoc(t_cmd *cmd)
             if ((rd = read(STDOUT_FILENO,typ,size)) < 1)
             {
                 if (!rd)
+                {
+                    free(p);
+                    free(typ);
                     perror("read");
+                }
             }
             if (ft_strcmp(typ,cmd->redirection_file) == 0)
             {
@@ -62,8 +86,10 @@ void    herdoc(t_cmd *cmd)
                 cmd->herd = open(file_name,O_RDONLY,0644);
                 dup2(cmd->herd,STDIN_FILENO);
                 close(cmd->herd);
-                unlink("/home/ahmed/Desktop/githup/CHEBCHOB/outfile.txt");
-                break ;
+                unlink(p);
+                free(p);
+                free(typ);
+                return ;
             }
             write(cmd->herd,typ,size);
         }
@@ -82,8 +108,13 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
     int fd[2];
 
     if (cmd->next == NULL)
-        if (check_builting(cmd,env) == 1)
-            return ;
+    {
+        if (ft_strcmp(cmd->name,"cd") == 0)
+        {
+            if (check_builting(cmd,env) == 1)
+                return ;
+        }
+    }
     while (cmd != NULL)
     {
         cmd->vex = execve_cmd(cmd,*env);
@@ -111,21 +142,21 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
                 dup2(fd[1],STDOUT_FILENO);
                 close(fd[1]);
             }
-            close(fd[0]);
             redir(cmd);
-            herdoc(cmd);
+            herdoc(cmd,env);
+            close(fd[0]);
             if (check_builting(cmd,env) != 1)
             {
                 execve(cmd->vex,args1,(char **)env);
                 free((char *)cmd->vex);
                 // exit(1);
             }
-            else
-                free((char *)cmd->vex);
+            // else
+            //     free((char *)cmd->vex);
             // if (cmd->next != NULL)
             //         exit(1);
-            if (cmd->redirection == 3)
-                    exit(1);
+            // if (cmd->redirection == 4)
+            //         exit(1);
             exit(1);
         }
         if (fdd != 0)

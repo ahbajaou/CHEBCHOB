@@ -74,6 +74,7 @@ char *access_ve(char **path,t_cmd *cmd)
     }
     free(path);
     free(tmp);
+    free(p);
     tmp = NULL;
     return (NULL);
 }
