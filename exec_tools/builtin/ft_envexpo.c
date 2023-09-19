@@ -54,7 +54,7 @@ int check_double(ev_list **env, char *key, char *value)
     tmp = *env;
     while (tmp)
     {   
-        if (ft_strcmp(tmp->key, key) == 0 && ft_strcmp(tmp->value, value))
+        if (ft_strcmp(tmp->key, key) == 0 && ft_strcmp(tmp->value, value) && ft_strcmp(tmp->value, "NULL") == 0)
         {
             delet_expo(env, key, value);
             addback(env, key_value(key, value));

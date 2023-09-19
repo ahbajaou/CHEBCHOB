@@ -36,14 +36,14 @@ int check_builting(t_cmd *cmd, ev_list **env)
         ft_echo(cmd, *env);
         return (1);
     }
-    if (ft_strcmp("pwd", cmd->name) == 0)
-    {
-        ft_pwd();
-        return (1);
-    }
     if (ft_strcmp("cd", cmd->name) == 0)
     {
-        ft_cd(cmd, *env);
+        ft_cd(cmd,env);
+        return (1);
+    }
+    if (ft_strcmp("pwd", cmd->name) == 0)
+    {
+        ft_pwd(*env);
         return (1);
     }
     if (ft_strcmp("exit", cmd->name) == 0)

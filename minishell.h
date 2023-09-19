@@ -26,6 +26,7 @@ typedef struct s_cmd
 {
     int outf;
     int inf;
+    const char  *vex;
     int  pid;
     int herd;
     int arg_count;
@@ -75,15 +76,16 @@ char **get_path(ev_list *env,t_cmd *cmd);
 void    free4free(char **tmp);
 void ft_echo(t_cmd *cmd, ev_list *env);
 void    ft_unset(ev_list **env, t_cmd *cmd);
-void    ft_cd(t_cmd *cmd, ev_list *env);
+void    ft_cd(t_cmd *cmd, ev_list **env);
 void ft_env(ev_list *env, t_cmd *cmd);
 int ft_len(char *str);
-void ft_pwd(void);
+void ft_pwd(ev_list *env);
 // void ft_exit(t_cmd *cmd);
 void ft_exit(void);
 int ft_strcmp(char *s1, char *s2);
 char *access_ve(char **path,t_cmd *cmd);
 char	*ft_join2(char *s1, char *s2);
+void    sighandler(int sig);
 
 /*expand*/
 char* replace_env_vars(const char* input);

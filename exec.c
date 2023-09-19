@@ -81,8 +81,12 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
     int fdd = 0;
     int fd[2];
 
+    if (cmd->next == NULL)
+        if (check_builting(cmd,env) == 1)
+            return ;
     while (cmd != NULL)
     {
+        cmd->vex = execve_cmd(cmd,*env);
         char *args1[] = {cmd->name,cmd->args[0], NULL};
         if (pipe(fd) == -1) {
             printf("pipe fails\n");
@@ -96,6 +100,7 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
         }
         if (cmd->pid == 0)
         {
+            signal(SIGQUIT,sighandler);
             if (fdd != 0)
             {
                 dup2(fdd,STDIN_FILENO);
@@ -111,14 +116,18 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
             herdoc(cmd);
             if (check_builting(cmd,env) != 1)
             {
-                execve(execve_cmd(cmd,*env),args1,(char **)env);
-                exit(1);
+                execve(cmd->vex,args1,(char **)env);
+                free((char *)cmd->vex);
+                // exit(1);
             }
-            if (cmd->next != NULL)
-                exit(1);
+            else
+                free((char *)cmd->vex);
+            // if (cmd->next != NULL)
+            //         exit(1);
             if (cmd->redirection == 3)
                     exit(1);
-		}
+            exit(1);
+        }
         if (fdd != 0)
             close(fdd);
         fdd = fd[0];

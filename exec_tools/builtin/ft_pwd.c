@@ -2,11 +2,20 @@
 
 #include "../../minishell.h"
 
-void ft_pwd(void)
+void ft_pwd(ev_list *env)
 {
-    char cwd[256];
+    ev_list *tmp;
 
-    if (getcwd(cwd, sizeof(cwd)) != NULL)
-        printf("%s\n", cwd);
-    return;
+    tmp = env;
+    while (tmp)
+    {
+        if (ft_strcmp(tmp->key,"PWD") == 0)
+            {
+                printf("%s\n",tmp->value);
+                return ;
+            }
+        tmp = tmp->next;
+    }
+    free(tmp);
+    tmp = NULL;
 }

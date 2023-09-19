@@ -10,7 +10,7 @@ void    free4free(char **tmp)
         free(tmp[i]);
         i++;
     }
-    free(tmp);
+    tmp = NULL;
 }
 ev_list	*_env(char **envp)
 {
@@ -24,6 +24,7 @@ ev_list	*_env(char **envp)
         tmp = ft_split(envp[i], '=');
         addback(&env,key_value(tmp[0], tmp[1]));
         free4free(tmp);
+        free(tmp);
         i++;
     }
     return(env);
@@ -32,9 +33,9 @@ ev_list	*_env(char **envp)
 void    sighandler(int sig)
 {
     if (sig == SIGINT)
-        exit(0);
+        printf("\nminishell: ");
     if (sig == SIGQUIT)
-        exit(0);
+        exit(1);
 }
 int main(int ac,char **av,char **envp)
 {
@@ -42,11 +43,10 @@ int main(int ac,char **av,char **envp)
     (void)av;
 
     t_cmd *commands = NULL;
-    // (void)env;a
     ev_list *env = _env(envp);
+    signal(SIGINT,sighandler);
     while(1)
     {
-        signal(SIGINT,sighandler);
         signal(SIGQUIT,sighandler);
         char *str = readline("minishell: ");
         if (!str)

@@ -24,14 +24,14 @@ char **get_path(ev_list *env,t_cmd *cmd)
     while (tmp)
     {
         if (ft_strcmp(tmp->key, "PATH") == 0)
-        {
                 path = ft__strdup(tmp->value);
-        }
         tmp = tmp->next;
     }
     if (!path)
     {
         printf("No such file or directory\n");
+        free(tmp);
+        tmp = NULL;
         return NULL;
     }
     spl = ft_split(path, ':');
@@ -51,7 +51,10 @@ char *access_ve(char **path,t_cmd *cmd)
     char *current;
     char *p;
     if (!path)
+    {
         return NULL;
+    }
+    // printf("----%s----\n",path[0]);
     while (tmp)
     {
         while (path[i])
@@ -59,11 +62,17 @@ char *access_ve(char **path,t_cmd *cmd)
             current = ft_join2(path[i],"/");
             p = ft_join2(current,cmd->name);
             if (!access(p,F_OK))
+            {
+                free4free(path + i + 1);
+                free(path);
                 return (p);
+            }
+            free(p);
             i++;
         }
         tmp = tmp->next;
     }
+    free(path);
     free(tmp);
     tmp = NULL;
     return (NULL);
