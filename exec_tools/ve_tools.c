@@ -44,37 +44,37 @@ char **get_path(ev_list *env,t_cmd *cmd)
 char *access_ve(char **path,t_cmd *cmd)
 {
 
-    t_cmd *tmp;
+    // t_cmd *tmp;
 
-    tmp = cmd;
+    // tmp = cmd;
     int i = 0;
     char *current;
-    char *p;
+    // char *p;
     if (!path)
     {
         return NULL;
     }
-    // printf("----%s----\n",path[0]);
-    while (tmp)
-    {
+    // while (tmp)
+    // {
         while (path[i])
         {
             current = ft_join2(path[i],"/");
-            p = ft_join2(current,cmd->name);
-            if (!access(p,F_OK))
+            current = ft_join2(current,cmd->name);
+            if (!access(current,F_OK))
             {
                 free4free(path + i + 1);
                 free(path);
-                return (p);
+                // free(p);
+                return (current);
             }
-            free(p);
+            free(current);
             i++;
         }
-        tmp = tmp->next;
-    }
-    free(path);
-    free(tmp);
-    free(p);
-    tmp = NULL;
+    //     tmp = tmp->next;
+    // }
+    // free(path);
+    // free(tmp);
+    // free(current);
+    // tmp = NULL;
     return (NULL);
 }

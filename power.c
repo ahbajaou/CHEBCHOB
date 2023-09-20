@@ -109,7 +109,7 @@ t_cmd* parse_input(char *input)
         if (!current) 
         {
             current = create_command(NULL);
-            if (!head) 
+            if (!head)
                 head = current;
         }
 

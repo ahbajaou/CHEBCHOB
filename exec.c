@@ -13,20 +13,41 @@
 
 #include "minishell.h"
 
+char *herpath(ev_list **env,char *key,char *file_name)
+{
+    ev_list *tmp;
+
+    tmp = *env;
+    char *p;
+    char *current;
+    while (tmp)
+    {
+        if (ft_strcmp(tmp->key,key) == 0)
+            {
+               
+                current = ft_join2(tmp->value,"/");
+                p = ft_join2(current,file_name);
+                return (p);
+            }
+            tmp = tmp->next;
+    }
+    free(tmp);
+    return NULL;
+}
 void redir(t_cmd *cmd)
 {
     int fdd;
-    if (cmd->redirection == 2)
-    {
-        cmd->outf = open(cmd->redirection_file, O_CREAT | O_RDWR ,0644);
-        dup2(cmd->outf,STDOUT_FILENO);
-        close(cmd->outf);
-    }
     if (cmd->redirection == 1)
     {
         cmd->inf = open(cmd->redirection_file,O_RDONLY , 0644);
         dup2(cmd->inf,STDIN_FILENO);
         close(cmd->inf);
+    }
+    if (cmd->redirection == 2)
+    {
+        cmd->outf = open(cmd->redirection_file, O_CREAT | O_RDWR ,0644);
+        dup2(cmd->outf,STDOUT_FILENO);
+        close(cmd->outf);
     }
     if (cmd->redirection == 3)
     {
@@ -36,25 +57,6 @@ void redir(t_cmd *cmd)
     }
 }
 
-char *herpath(ev_list **env,char *key,char *file_name)
-{
-    ev_list *tmp;
-
-    tmp = *env;
-    while (tmp)
-    {
-        if (ft_strcmp(tmp->key,key) == 0)
-            {
-               
-                char *current = ft_join2(tmp->value,"/");
-                char *p = ft_join2(current,file_name);
-                return (p);
-            }
-            tmp = tmp->next;
-    }
-    free(tmp);
-    return NULL;
-}
 void    herdoc(t_cmd *cmd,ev_list **env)
 {
     (void)env;
@@ -64,19 +66,19 @@ void    herdoc(t_cmd *cmd,ev_list **env)
         char *file_name = "outfile.txt";
         char *typ;
         int rd;
-        char *p = herpath(env,"PWD",file_name);
-        cmd->herd = open(file_name,O_CREAT | O_RDWR , 0644);
         size_t size = strlen(cmd->redirection_file);
+        char *p = herpath(env,"PWD",file_name);
         typ = malloc(sizeof(char *)* size);
         typ[size] = '\0';
         while (1)
         {
+            // signal(SIGQUIT,sighandler);
+            cmd->herd = open(file_name,O_CREAT | O_RDWR , 0644);
             if ((rd = read(STDOUT_FILENO,typ,size)) < 1)
             {
                 if (!rd)
                 {
-                    free(p);
-                    free(typ);
+                    // exit(1);
                     perror("read");
                 }
             }
@@ -92,6 +94,7 @@ void    herdoc(t_cmd *cmd,ev_list **env)
                 return ;
             }
             write(cmd->herd,typ,size);
+            close(cmd->herd);
         }
     }
 }
@@ -107,31 +110,32 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
     int fdd = 0;
     int fd[2];
 
-    if (cmd->next == NULL)
-    {
-        if (ft_strcmp(cmd->name,"cd") == 0)
-        {
-            if (check_builting(cmd,env) == 1)
-                return ;
-        }
-    }
+    // if (cmd->next == NULL)
+    // {
+    //     if (ft_strcmp(cmd->name,"cd") == 0 ||ft_strcmp(cmd->name,"exit") == 0  || ft_strcmp(cmd->name,"export") == 0 )
+    //     {
+    //     }
+    // }
     while (cmd != NULL)
     {
-        cmd->vex = execve_cmd(cmd,*env);
         char *args1[] = {cmd->name,cmd->args[0], NULL};
-        if (pipe(fd) == -1) {
-            printf("pipe fails\n");
+        if (pipe(fd) == -1)
+        {
+            perror("pipe");
             return ;
         }
         cmd->pid = fork();
         if (cmd->pid == -1)
         {
-            printf("fork fails\n");
+            perror("fork");
             return ;
         }
         if (cmd->pid == 0)
         {
-            signal(SIGQUIT,sighandler);
+            if (check_builting(cmd,env) == 1)
+                return ;
+            cmd->vex = execve_cmd(cmd,*env);
+            // signal(SIGQUIT,sighandler);
             if (fdd != 0)
             {
                 dup2(fdd,STDIN_FILENO);
@@ -142,23 +146,27 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
                 dup2(fd[1],STDOUT_FILENO);
                 close(fd[1]);
             }
-            redir(cmd);
             herdoc(cmd,env);
+            redir(cmd);
             close(fd[0]);
-            if (check_builting(cmd,env) != 1)
-            {
+            // if (check_builting(cmd,env) != 1)
+            // {
+                if (!cmd->vex)
+                    return ;
                 execve(cmd->vex,args1,(char **)env);
-                free((char *)cmd->vex);
+                // free((char *)cmd->vex);
                 // exit(1);
-            }
+            // }
             // else
             //     free((char *)cmd->vex);
             // if (cmd->next != NULL)
             //         exit(1);
             // if (cmd->redirection == 4)
             //         exit(1);
+            // free((char *)cmd->vex);
             exit(1);
         }
+        // free((char *)cmd->vex);
         if (fdd != 0)
             close(fdd);
         fdd = fd[0];

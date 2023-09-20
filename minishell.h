@@ -81,7 +81,7 @@ void ft_env(ev_list *env, t_cmd *cmd);
 int ft_len(char *str);
 void ft_pwd(ev_list *env);
 // void ft_exit(t_cmd *cmd);
-void ft_exit(void);
+void ft_exit(t_cmd *cmd);
 int ft_strcmp(char *s1, char *s2);
 char *access_ve(char **path,t_cmd *cmd);
 char	*ft_join2(char *s1, char *s2);

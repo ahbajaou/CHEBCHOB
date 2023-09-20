@@ -18,6 +18,7 @@ void    print_echo(char **str,int i,int flag)
     free(tmp);
     if (flag == 1)
         printf("\n");
+    return ;
 }
 int handel_n(char **str)
 {
@@ -64,6 +65,6 @@ void ft_echo(t_cmd *cmd, ev_list *env)
 {
     (void)env;
         if (handel_n(cmd->args) != 1)
-            return ;
+            exit(0);
 }
 

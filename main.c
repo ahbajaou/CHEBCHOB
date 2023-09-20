@@ -34,8 +34,8 @@ void    sighandler(int sig)
 {
     if (sig == SIGINT)
         printf("\nminishell: ");
-    if (sig == SIGQUIT)
-        exit(1);
+    // if (sig == SIGQUIT)
+    //     exit(1);
 }
 int main(int ac,char **av,char **envp)
 {
@@ -47,7 +47,8 @@ int main(int ac,char **av,char **envp)
     signal(SIGINT,sighandler);
     while(1)
     {
-        signal(SIGQUIT,sighandler);
+        // signal(SIGQUIT,sighandler);
+        printf("---------------------------------\n");
         char *str = readline("minishell: ");
         if (!str)
             exit(1);
@@ -59,7 +60,8 @@ int main(int ac,char **av,char **envp)
         add_history(str);
 
         // Gestion des guillemets non fermés
-        while (!check_quotes(str)) {
+        while (!check_quotes(str))
+        {
             char *continuation = readline("> ");  // Prompt pour la continuation
             if (!continuation)
                 break;
@@ -70,7 +72,8 @@ int main(int ac,char **av,char **envp)
         }
 
         char* replaced_str = replace_env_vars(str);
-        if (!replaced_str) {
+        if (!replaced_str)
+        {
             free(str);
             continue;  // Si replace_env_vars renvoie NULL, ignorez le reste du traitement
         }
@@ -80,7 +83,6 @@ int main(int ac,char **av,char **envp)
         free(replaced_str);
         free(str);
         free(commands->name);
-        free4free(commands->args);
         free(commands);
     }
 }

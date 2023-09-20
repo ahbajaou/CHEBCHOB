@@ -11,14 +11,24 @@ void print_env(ev_list **env, int flag)
     while (tmp)
     {
         if (flag == 1 && tmp->key != NULL && tmp->value == NULL)
+        {
             printf("declare -x %s\n", tmp->key);
+            // return ;
+        }
         if (flag == 0 && tmp->key != NULL && tmp->value != NULL)
+        {
             printf("%s=%s\n", tmp->key, tmp->value);
+            // return ;
+        }
         if (flag == 1 && tmp->key != NULL && tmp->value != NULL)
+        {
             printf("declare -x %s=%s\n", tmp->key, tmp->value);
+            // return ;
+        }
         tmp = tmp->next;
     }
     free(tmp);
+    return ;
 }
 
 void delet_expo(ev_list **env, char *key,char *value)
@@ -45,6 +55,7 @@ void delet_expo(ev_list **env, char *key,char *value)
             }
         }
     }
+    return ;
 
 }
 int check_double(ev_list **env, char *key, char *value)
@@ -82,6 +93,7 @@ void expo_pars(char *str,char *str1,ev_list **env)
         i++;
     }
     addback(env, key_value(str, str1));
+    return ;
 }
 void add_expo(char **str, ev_list **env)
 {
@@ -100,7 +112,10 @@ void add_expo(char **str, ev_list **env)
     {
         tmp = ft_split(str[i], '=');
         if (check_double(env, tmp[0], tmp[1]))
+        {
             expo_pars(tmp[0], tmp[1],env);
+            return ;
+        }
         i++;
     }
     free4free(tmp);
@@ -116,7 +131,13 @@ void ft_env(ev_list *env, t_cmd *cmd)
     if (ft_strcmp(cmd->name, "env") == 0)
         flag = 0;
     if (flag == -1)
+    {
         add_expo(cmd->args, &env);
+        return ;
+    }
     if (flag == 0 || flag == 1)
+    {
         print_env(&env, flag);
+        exit(1);
+    }
 }

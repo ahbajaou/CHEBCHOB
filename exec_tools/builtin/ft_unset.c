@@ -42,9 +42,12 @@ void        delet_unset(ev_list **env,char *key)
 void    ft_unset(ev_list **env, t_cmd *cmd)
 {
     int i = 0;
-    while (cmd->args[i])
+    if (cmd->args)
     {
-        delet_unset(env,cmd->args[i]);
-        i++;
+        while (cmd->args[i])
+        {
+            delet_unset(env,cmd->args[i]);
+            i++;
+        }
     }
 }
