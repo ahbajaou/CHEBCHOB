@@ -3,10 +3,9 @@ NAMES = minishell
  
 CFILES = main.c lexer.c power.c func.c exec.c exec_tools/*.c exec_tools/builtin/*.c dollar.c
 
-# CC = clang 
-CC = gcc -g
+CC = cc -g
 
-CFLAGS = -Wall -Wextra -Werror  -lreadline -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g3 -lreadline
 
 all :  $(NAMES)
 

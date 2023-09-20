@@ -2,27 +2,39 @@
 
 char* custom(char* str, char* delims, char** saveptr) 
 {
-    char* token_start ;
+    char* token_start;
 
     if (!str) 
         str = *saveptr;
-    while (*str && strchr(delims, *str))
+    while (*str && strchr(delims, *str)) 
         str++;
-    if (*str == '\0') 
+
+    if (*str == '"') 
     {
-        *saveptr = str;
-        return NULL;
-    }
-    token_start = str;
-    while (*str && !strchr(delims, *str))
         str++;
-    if (*str == '\0')
-        *saveptr = str;
+        token_start = str;
+        while (*str && *str != '"') 
+            str++;
+        if (*str == '"') 
+        {
+            *str = '\0'; 
+            str++;
+        }
+    }
     else 
     {
-        *str = '\0';
-        *saveptr = str + 1;
+        token_start = str;
+        while (*str && !strchr(delims, *str)) 
+            str++;
+        if (*str) 
+        {
+            *str = '\0';
+            str++;
+        }
     }
+    while (*str && strchr(delims, *str)) 
+        str++;
+    *saveptr = str;
     return token_start;
 }
 
@@ -30,25 +42,41 @@ char* custom_str(char* str, char* delims)
 {
     static char* next_token = NULL;
     char* token_start;
-
     if (!str) 
         str = next_token;
-    while (*str && strchr(delims, *str)) 
-        str++;
-    if (*str == '\0') 
+    if (*str == '"') 
     {
-        next_token = str;
-        return NULL;
-    }
-    token_start = str;
-    while (*str && !strchr(delims, *str)) 
         str++;
-    if (*str) 
-    {
-        *str = '\0';
-        next_token = str + 1;
+        token_start = str;
+        while (*str && *str != '"') 
+            str++;
+        if (*str == '"') 
+        {
+            *str = '\0'; 
+            next_token = str + 1;
+        }
+        else 
+            next_token = str;
     }
     else 
-        next_token = str;
+    {
+        while (*str && strchr(delims, *str)) 
+            str++;
+        if (*str == '\0') 
+        {
+            next_token = str;
+            return NULL;
+        }
+        token_start = str;
+        while (*str && !strchr(delims, *str)) 
+            str++;
+        if (*str) 
+        {
+            *str = '\0';
+            next_token = str + 1;
+        }
+        else 
+            next_token = str;
+    }
     return token_start;
 }

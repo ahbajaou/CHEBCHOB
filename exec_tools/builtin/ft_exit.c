@@ -37,5 +37,5 @@ void ft_exit(t_cmd *cmd)
 		printf("exit: too many arguments\n");
 		return ;
 	}
-	exit(1);
+	return ;
 }

@@ -13,6 +13,26 @@
 #include "../../minishell.h"
 
 
+int checkbuilt(t_cmd *cmd, ev_list **env)
+{
+    if (ft_strcmp("echo", cmd->name) == 0)
+    {
+        ft_echo(cmd, *env);
+        return (1);
+    }
+    if (ft_strcmp("pwd", cmd->name) == 0)
+    {
+        ft_pwd(*env);
+        return (1);
+    }
+    if (ft_strcmp("exit", cmd->name) == 0)
+    {
+        ft_exit(cmd);
+        return (1);
+    }
+    return (0);
+}
+
 int check_builting(t_cmd *cmd, ev_list **env)
 {
 
@@ -31,25 +51,10 @@ int check_builting(t_cmd *cmd, ev_list **env)
         ft_unset(env, cmd);
         return (1);
     }
-    if (ft_strcmp("echo", cmd->name) == 0)
+    if (ft_strcmp("cd", cmd->name) == 0)
     {
-        ft_echo(cmd, *env);
+        ft_cd(cmd,env);
         return (1);
     }
-    // if (ft_strcmp("cd", cmd->name) == 0)
-    // {
-    //     ft_cd(cmd,env);
-    //     return (1);
-    // }
-    // if (ft_strcmp("pwd", cmd->name) == 0)
-    // {
-    //     ft_pwd(*env);
-    //     return (1);
-    // }
-    // if (ft_strcmp("exit", cmd->name) == 0)
-    // {
-    //     ft_exit(cmd);
-    //     return (1);
-    // }
     return (0);
 }
