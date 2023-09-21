@@ -118,7 +118,7 @@ void add_expo(char **str, ev_list **env)
         }
         i++;
     }
-    // free4free(tmp);
+    free4free(tmp);
 }
 void ft_env(ev_list *env, t_cmd *cmd)
 {

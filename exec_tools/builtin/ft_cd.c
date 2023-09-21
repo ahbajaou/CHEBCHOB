@@ -34,4 +34,5 @@ void    ft_cd(t_cmd *cmd, ev_list **env)
         _exec_cd(env,getenv("HOME"));
     else
         _exec_cd(env,cmd->args[0]);
+    return ;
 }

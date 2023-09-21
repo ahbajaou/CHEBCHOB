@@ -1,7 +1,7 @@
 
 #include "../../minishell.h"
 
-void ft_exit(t_cmd *cmd)
+void opft_exit(t_cmd *cmd)
 {
 	int i = 0;
 	// int j = 0;
@@ -37,5 +37,5 @@ void ft_exit(t_cmd *cmd)
 		printf("exit: too many arguments\n");
 		return ;
 	}
-	return ;
+	exit(1);
 }

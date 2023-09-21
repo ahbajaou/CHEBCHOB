@@ -62,7 +62,7 @@ char *access_ve(char **path,t_cmd *cmd)
             current = ft_join2(current,cmd->name);
             if (!access(current,F_OK))
             {
-                // free4free(path + i + 1);
+                free4free(path + i + 1);
                 free(path);
                 // free(p);
                 return (current);

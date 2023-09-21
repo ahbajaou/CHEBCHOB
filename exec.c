@@ -39,14 +39,12 @@ void redir(t_cmd *cmd)
     int fdd;
     if (cmd->redirection == 1)
     {
-        printf("------------------------\n");
         cmd->inf = open(cmd->redirection_file,O_RDONLY , 0644);
         dup2(cmd->inf,STDIN_FILENO);
         close(cmd->inf);
     }
     if (cmd->redirection == 2)
     {
-        printf("=============\n");
         cmd->outf = open(cmd->redirection_file, O_CREAT | O_RDWR ,0644);
         dup2(cmd->outf,STDOUT_FILENO);
         close(cmd->outf);
@@ -112,11 +110,12 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
     int fdd = 0;
     int fd[2];
 
-    if (check_builting(cmd,env) == 1)
+
+    if (checkbuilt(cmd,env) == 1)
         return ;
     while (cmd != NULL)
     {
-        char *args1[] = {cmd->name,cmd->args[0],NULL};
+        char *args1[] = {cmd->name,cmd->args[0], NULL};
         if (pipe(fd) == -1)
         {
             perror("pipe");
@@ -130,9 +129,8 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
         }
         if (cmd->pid == 0)
         {
+            cmd->vex = execve_cmd(cmd,*env);
             // signal(SIGQUIT,sighandler);
-            if (check_builting(cmd,env) == 1)
-                exit(1);
             if (fdd != 0)
             {
                 dup2(fdd,STDIN_FILENO);
@@ -143,17 +141,18 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
                 dup2(fd[1],STDOUT_FILENO);
                 close(fd[1]);
             }
-            close(fd[0]);
             herdoc(cmd,env);
             redir(cmd);
-            cmd->vex = execve_cmd(cmd,*env);
-            if (!cmd->vex)
-                return ;
-            if (!execve(cmd->vex,args1,(char **)env))
-                perror("execve");
-
+            close(fd[0]);
+            if (check_builting(cmd,env) != 1)
+            {
+                if (!cmd->vex)
+                    return ;
+                execve(cmd->vex,args1,(char **)env);
+            }
             exit(1);
         }
+        // free((char *)cmd->vex);
         if (fdd != 0)
             close(fdd);
         fdd = fd[0];

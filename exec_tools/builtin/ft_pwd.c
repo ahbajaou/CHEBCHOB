@@ -18,4 +18,5 @@ void ft_pwd(ev_list *env)
     }
     free(tmp);
     tmp = NULL;
+    return ;
 }

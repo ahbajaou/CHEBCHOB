@@ -26,19 +26,15 @@ typedef struct s_cmd
 {
     int outf;
     int inf;
+    const char  *vex;
     int  pid;
     int herd;
-    char *vex;
     int arg_count;
     int pip[2];
     char *name;
     char **args;
     t_redirection redirection;
     char *redirection_file;
-    int dup_number;           
-    char *redirection_cmd;    
-    char **redirection_args; 
-    int redirection_arg_count;
     struct s_cmd *next;
 } t_cmd;
 
@@ -49,14 +45,13 @@ typedef struct e_list
     struct e_list *next;
 }   ev_list;
 /*lexer*/
-char** lexer(char* input);
-void free_tokens(char** tokens);
+
+
 /*parse*/
-// t_cmd* parse_input(char *input);
-t_cmd* parse_input_from_tokens(char** tokens);
+t_cmd* parse_input(char *input);
 void print_commands(t_cmd *head);
 void handle_pipe(char **token, char **lasts, t_cmd **current);
-char* handle_redirection(char **tokens, t_cmd *current, int *i, int tokens_length);
+void handle_redirection(char **token, char **lasts, t_cmd *current);
 t_cmd* create_command(char *name);
 void add_argument(t_cmd *command, char *arg);
 
@@ -77,30 +72,24 @@ void addback(ev_list **list, ev_list *new);
 char    *execve_cmd(t_cmd *cmd, ev_list *env);
 // void exec_cmd(t_cmd *cmd,ev_list **env,char **envp);
 // char **get_path(ev_list *env);
+int checkbuilt(t_cmd *cmd, ev_list **env);
 char **get_path(ev_list *env,t_cmd *cmd);
+void    free4free(char **tmp);
 void ft_echo(t_cmd *cmd, ev_list *env);
 void    ft_unset(ev_list **env, t_cmd *cmd);
 void    ft_cd(t_cmd *cmd, ev_list **env);
 void ft_env(ev_list *env, t_cmd *cmd);
 int ft_len(char *str);
-// void ft_pwd(void);
 void ft_pwd(ev_list *env);
 // void ft_exit(t_cmd *cmd);
- void ft_exit(t_cmd *cmd);
+void ft_exit(t_cmd *cmd);
 int ft_strcmp(char *s1, char *s2);
 char *access_ve(char **path,t_cmd *cmd);
 char	*ft_join2(char *s1, char *s2);
+void    sighandler(int sig);
 
 /*expand*/
 char* replace_env_vars(const char* input);
 int check_quotes(const char* input);
 char* read_input_with_quotes();
-
-/*free*/
-void free_command(t_cmd *command);
-
-
-void print_args(char** args);
-void print_command_details(t_cmd *command);
-void print_all_commands(t_cmd *head);
 #endif

@@ -28,7 +28,7 @@ size_t calculate_required_length(const char* input)
 
 int check_quotes(const char* input) 
 {
-    char quote_char = '\0';
+    char quote_char = '\0';  // Utilisé pour suivre le type de guillemets que nous traitons
     while (*input) 
     {
         if (*input == '\'' && quote_char != '"') 
@@ -71,46 +71,142 @@ char* read_input_with_quotes()
 
         if (full_input[full_len - 1] == '\n') 
         {
-            full_input[full_len - 1] = '\0';
+            full_input[full_len - 1] = '\0';  // Remove newline
             if (check_quotes(full_input)) 
                 break;
             else 
-                printf("> ");
+                printf("> ");  // Prompt for continuation of input
         }
     }
     free(line);
     return full_input;
 }
 
+// char* replace_env_vars(const char* input) 
+// {
+//     size_t required_length = calculate_required_length(input);
+//     char* result = malloc(required_length + 1);
+//     if (!result) 
+//     {
+//         perror("malloc");
+//         exit(1);
+//     }
+    
+//     char* current = result;
+//     char quote_char = '\0';
+//     char prev_char = '\0';  // Ajout d'une variable pour suivre le caractère précédent
+
+//     while (*input) 
+//     {
+//         if (*input == '\'' && quote_char != '"' && prev_char != '\\') 
+//         {
+//             if (quote_char == '\'') 
+//                 quote_char = '\0';
+//             else 
+//                 quote_char = '\'';
+//             input++;
+//         } 
+//         else if (*input == '"' && quote_char != '\'' && prev_char != '\\') 
+//         {
+//             if (quote_char == '"') 
+//                 quote_char = '\0';
+//             else 
+//                 quote_char = '"';
+//             input++;
+//         } 
+//         else if (*input == '$' && quote_char != '\'') 
+//         {
+//             input++;
+//             char var_name[256];
+//             char* var_start = var_name;
+//             while (*input && (isalnum(*input) || *input == '_')) 
+//                 *var_start++ = *input++;
+//             *var_start = '\0';
+//             char* var_value = getenv(var_name);
+//             if (var_value) 
+//             {
+//                 strcpy(current, var_value);
+//                 current += strlen(var_value);
+//             }
+//         } 
+//         else 
+//         {
+//             if (*input == '\\' && (quote_char == '"' || quote_char == '\'') && (input[1] == quote_char)) 
+//             {
+//                 *current++ = input[1];
+//                 input += 2;
+//             } 
+//             else 
+//                 *current++ = *input++;
+//         }
+//         prev_char = *(input - 1);  // Mettre à jour le caractère précédent
+//     }
+//     *current = '\0';
+//     return result;
+// }
 char* replace_env_vars(const char* input) 
 {
-    char* result = NULL;
-    char* buffer = malloc(calculate_required_length(input) + 1);
-    if (!buffer) exit(1);
-    const char* p = input;
-    char* q = buffer;
-    while (*p) 
+    size_t required_length = calculate_required_length(input);
+    char* result = malloc(required_length + 1);
+    if (!result) {
+        perror("malloc");
+        exit(1);
+    }
+
+    char* current = result;
+    char quote_char = '\0';
+    int is_escaped = 0;  // Utilisé pour suivre si le caractère actuel est échappé
+
+    while (*input) 
     {
-        if (*p == '$') 
+        if (*input == '\\' && (input[1] == '"' || input[1] == '\'')) 
         {
-            const char* start = p + 1;
-            while (isalnum(*start) || *start == '_') start++;
-            char varname[256];
-            strncpy(varname, p + 1, start - p - 1);
-            varname[start - p - 1] = '\0';
-            char* value = getenv(varname);
-            if (value) 
+            *current++ = input[1];
+            input += 2;
+            continue;
+        }
+
+        if (*input == '\'' && !is_escaped && quote_char != '"') 
+        {
+            if (quote_char == '\'') 
+                quote_char = '\0';
+            else 
+                quote_char = '\'';
+        } 
+        else if (*input == '"' && !is_escaped && quote_char != '\'') 
+        {
+            if (quote_char == '"') 
+                quote_char = '\0';
+            else 
+                quote_char = '"';
+        } 
+        else if (*input == '$' && quote_char != '\'') 
+        {
+            input++;
+            char var_name[256];
+            char* var_start = var_name;
+            while (*input && (isalnum(*input) || *input == '_')) 
+                *var_start++ = *input++;
+            *var_start = '\0';
+            char* var_value = getenv(var_name);
+            if (var_value) 
             {
-                strcpy(q, value);
-                q += strlen(value);
+                strcpy(current, var_value);
+                current += strlen(var_value);
             }
-            p = start;
         } 
         else 
-            *q++ = *p++;
+        {
+            *current++ = *input;
+        }
+
+        if (*input == '\\') 
+            is_escaped = !is_escaped;
+        else 
+            is_escaped = 0;
+
+        input++;
     }
-    *q = '\0';
-    result = strdup(buffer);
-    free(buffer);
+    *current = '\0';
     return result;
 }

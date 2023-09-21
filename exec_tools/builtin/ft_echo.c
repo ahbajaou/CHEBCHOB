@@ -65,6 +65,6 @@ void ft_echo(t_cmd *cmd, ev_list *env)
 {
     (void)env;
         if (handel_n(cmd->args) != 1)
-            return ;
+            exit(0);
 }
 
