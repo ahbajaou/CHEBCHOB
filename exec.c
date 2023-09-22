@@ -108,7 +108,6 @@ void    herdoc(t_cmd *cmd,ev_list **env)
     }
 }
 
-
 void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
 {
     (void)env;
@@ -120,7 +119,6 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
     // int flag = 0;
     int fd[2];
     // _global_status g_exit;
-    g_exit._exit = 0;
     if (cmd->next == NULL)
     {
         if (checkbuilt(cmd,env) == 1)
@@ -134,13 +132,15 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
             perror("pipe");
             return ;
         }
+        g_exit._exit = 0;
+        checkErrer(cmd,*env);
+        cmd->vex = execve_cmd(cmd,*env);
         cmd->pid = fork();
         if (cmd->pid == -1)
         {
             perror("fork");
             return ;
         }
-        cmd->vex = execve_cmd(cmd,*env);
         if (cmd->pid == 0)
         {
             signal(SIGQUIT,sighandler);
@@ -159,11 +159,8 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
             close(fd[0]);
                 if (!cmd->vex)
                 {
-                    // printf("command not found\n");
-                    g_exit._exit = 126;
-                    // printf("-----------[%d]----------\n",g_exit._exit);
                     free((char *)cmd->vex);
-                    exit(0) ;
+                    return ;
                 }
             if (check_builting(cmd,env) != 1)
             {
@@ -173,7 +170,6 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
             exit(1);
         }
         free((char *)cmd->vex);
-    // printf("-----------{%d}----------\n",g_exit._exit);
         if (fdd != 0)
             close(fdd);
         fdd = fd[0];

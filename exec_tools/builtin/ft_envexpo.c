@@ -125,7 +125,6 @@ void ft_env(ev_list *env, t_cmd *cmd)
     int flag;
 
     flag = -1;
-
     if (ft_strcmp(cmd->name, "export") == 0 && !cmd->args[0])
         flag = 1;
     if (ft_strcmp(cmd->name, "env") == 0)

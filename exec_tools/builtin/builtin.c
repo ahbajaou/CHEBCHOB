@@ -59,14 +59,9 @@ int check_builting(t_cmd *cmd, ev_list **env)
     }
     if (ft_strcmp("cd", cmd->name) == 0)
     {
-        printf("-------------\n");
         ft_cd(cmd,env);
         return (1);
     }
-    // if (ft_strcmp("exit", cmd->name) == 0)
-    // {
-    //     ft_exit(cmd);
-    //     return (1);
-    // }
+
     return (0);
 }

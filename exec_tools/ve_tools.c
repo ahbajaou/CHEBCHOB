@@ -67,6 +67,7 @@ char *access_ve(char **path,t_cmd *cmd)
                 // free(p);
                 return (current);
             }
+            // if (access(current,F_OK))
             free(current);
             i++;
         }
