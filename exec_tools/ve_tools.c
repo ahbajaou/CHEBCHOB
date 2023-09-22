@@ -72,7 +72,7 @@ char *access_ve(char **path,t_cmd *cmd)
         }
     //     tmp = tmp->next;
     // }
-    // free(path);
+    free(path);
     // free(tmp);
     // free(current);
     // tmp = NULL;

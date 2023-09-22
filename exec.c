@@ -13,6 +13,15 @@
 
 #include "minishell.h"
 
+
+typedef struct global_status
+{
+    int _exit;
+    
+}global_status;
+
+struct global_status g_exit;
+
 char *herpath(ev_list **env,char *key,char *file_name)
 {
     ev_list *tmp;
@@ -70,15 +79,15 @@ void    herdoc(t_cmd *cmd,ev_list **env)
         char *p = herpath(env,"PWD",file_name);
         typ = malloc(sizeof(char *)* size);
         typ[size] = '\0';
+        signal(SIGQUIT,sighandler);
         while (1)
         {
-            // signal(SIGQUIT,sighandler);
             cmd->herd = open(file_name,O_CREAT | O_RDWR , 0644);
             if ((rd = read(STDOUT_FILENO,typ,size)) < 1)
             {
                 if (!rd)
                 {
-                    // exit(1);
+                    exit(1);
                     perror("read");
                 }
             }
@@ -108,11 +117,15 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
     int cnt_pipe = 0;
     int j = 0;
     int fdd = 0;
+    // int flag = 0;
     int fd[2];
-
-
-    if (checkbuilt(cmd,env) == 1)
-        return ;
+    // _global_status g_exit;
+    g_exit._exit = 0;
+    if (cmd->next == NULL)
+    {
+        if (checkbuilt(cmd,env) == 1)
+            return ;
+    }
     while (cmd != NULL)
     {
         char *args1[] = {cmd->name,cmd->args[0], NULL};
@@ -127,10 +140,10 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
             perror("fork");
             return ;
         }
+        cmd->vex = execve_cmd(cmd,*env);
         if (cmd->pid == 0)
         {
-            cmd->vex = execve_cmd(cmd,*env);
-            // signal(SIGQUIT,sighandler);
+            signal(SIGQUIT,sighandler);
             if (fdd != 0)
             {
                 dup2(fdd,STDIN_FILENO);
@@ -144,15 +157,23 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
             herdoc(cmd,env);
             redir(cmd);
             close(fd[0]);
+                if (!cmd->vex)
+                {
+                    // printf("command not found\n");
+                    g_exit._exit = 126;
+                    // printf("-----------[%d]----------\n",g_exit._exit);
+                    free((char *)cmd->vex);
+                    exit(0) ;
+                }
             if (check_builting(cmd,env) != 1)
             {
-                if (!cmd->vex)
-                    return ;
-                execve(cmd->vex,args1,(char **)env);
+                if (!execve(cmd->vex,args1,(char **)env))
+                    perror("execve");
             }
             exit(1);
         }
-        // free((char *)cmd->vex);
+        free((char *)cmd->vex);
+    // printf("-----------{%d}----------\n",g_exit._exit);
         if (fdd != 0)
             close(fdd);
         fdd = fd[0];
@@ -160,6 +181,7 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
 	    cmd = cmd->next;
         cnt_pipe++;
     }
+    // waitpid(cmd->pid,&g_exit._exit,0);
     while (j < cnt_pipe)
     {
         wait(NULL);

@@ -51,7 +51,7 @@ void addback(ev_list **list, ev_list *new)
     if (!(*list))
     {
         *list = new;
-        return;
+        return ;
     }
     while (tmp->next != NULL)
         tmp = tmp->next;

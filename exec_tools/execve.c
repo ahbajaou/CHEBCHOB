@@ -18,5 +18,7 @@ char    *execve_cmd(t_cmd *cmd, ev_list *env)
 
     char **path = get_path(env,cmd);
     char *p = access_ve(path,cmd);
+    // free4free(path);
+    // free(path);
     return (p);
 }

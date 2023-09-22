@@ -47,6 +47,7 @@ typedef struct e_list
 /*lexer*/
 
 
+
 /*parse*/
 t_cmd* parse_input(char *input);
 void print_commands(t_cmd *head);

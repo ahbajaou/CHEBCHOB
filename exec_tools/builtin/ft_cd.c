@@ -1,11 +1,11 @@
 
 #include "../../minishell.h"
 
-void    update_path(ev_list **env, char *old,char *new)
+void    update_path(ev_list *env, char *old,char *new)
 {
     ev_list *tmp;
 
-    tmp = *env;
+    tmp = env;
     while (tmp)
     {
         if (ft_strcmp("PWD", tmp->key) == 0 && new != NULL)
@@ -21,10 +21,11 @@ void _exec_cd(ev_list **env,char *name)
 {
     char cwd[256];
     if (getcwd(cwd, sizeof(cwd)) != NULL)
-        update_path(env,cwd,NULL);
-    chdir(name);
+        update_path(*env,cwd,NULL);
+    if (chdir(name))
+        printf("No such file or directory\n");
     if (getcwd(cwd, sizeof(cwd)) != NULL)
-        update_path(env,NULL,cwd);
+        update_path(*env,NULL,cwd);
 }
 void    ft_cd(t_cmd *cmd, ev_list **env)
 {

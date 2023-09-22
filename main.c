@@ -2,6 +2,9 @@
 
 #include "minishell.h"
 
+// struct _global_status;
+// struct global_status g_exit;
+
 void    free4free(char **tmp)
 {
     int i = 0;
@@ -45,8 +48,9 @@ int main(int ac,char **av,char **envp)
     t_cmd *commands = NULL;
     ev_list *env = _env(envp);
     signal(SIGINT,sighandler);
-    signal(SIGQUIT,sighandler);
+    // signal(SIGQUIT,sighandler);
 
+    // g_exit._exit = 0;
     while(1)
     {
         char *str = readline("minishell: ");
@@ -85,4 +89,5 @@ int main(int ac,char **av,char **envp)
         free(commands->name);
         free(commands);
     }
+    // free(env);
 }

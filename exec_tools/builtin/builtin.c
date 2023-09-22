@@ -15,7 +15,7 @@
 int checkbuilt(t_cmd *cmd, ev_list **env)
 {
 
-    if (ft_strcmp("export", cmd->name) == 0)
+    if (ft_strcmp("export", cmd->name) == 0 || ft_strcmp("env", cmd->name) == 0)
     {
         ft_env(*env, cmd);
         return (1);
@@ -35,11 +35,13 @@ int checkbuilt(t_cmd *cmd, ev_list **env)
         ft_exit(cmd);
         return (1);
     }
-    if (ft_strcmp("env", cmd->name) == 0)
-    {
-        ft_env(*env, cmd);
-        return (1);
-    }
+    // else
+    //     printf("command not found\n");
+    // if (ft_strcmp("env", cmd->name) == 0)
+    // {
+    //     ft_env(*env, cmd);
+    //     return (1);
+    // }
     return (0);
 }
 
@@ -55,5 +57,16 @@ int check_builting(t_cmd *cmd, ev_list **env)
         ft_pwd(*env);
         return (1);
     }
+    if (ft_strcmp("cd", cmd->name) == 0)
+    {
+        printf("-------------\n");
+        ft_cd(cmd,env);
+        return (1);
+    }
+    // if (ft_strcmp("exit", cmd->name) == 0)
+    // {
+    //     ft_exit(cmd);
+    //     return (1);
+    // }
     return (0);
 }
