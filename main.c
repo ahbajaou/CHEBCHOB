@@ -74,7 +74,6 @@ int main(int ac,char **av,char **envp)
             free(old_str);
             free(continuation);
         }
-
         char* replaced_str = replace_env_vars(str);
         if (!replaced_str)
         {
@@ -82,11 +81,12 @@ int main(int ac,char **av,char **envp)
             continue;  // Si replace_env_vars renvoie NULL, ignorez le reste du traitement
         }
         commands = parse_input(replaced_str);
+        commands->Expo = ParsExport(str);
         print_commands(commands);
         exec_cmd(commands, &env, envp);
         free(replaced_str);
         free(str);
-        free(commands->name);
+        // free(commands->name);
         free(commands);
     }
     // free(env);

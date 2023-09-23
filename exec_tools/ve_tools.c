@@ -29,7 +29,7 @@ char **get_path(ev_list *env,t_cmd *cmd)
     }
     if (!path)
     {
-        printf("No such file or directory\n");
+        // printf("No such file or directory\n");
         free(tmp);
         tmp = NULL;
         return NULL;

@@ -27,6 +27,7 @@ typedef struct s_cmd
     int outf;
     int inf;
     const char  *vex;
+    char **Expo;
     int  pid;
     int herd;
     int arg_count;
@@ -85,12 +86,13 @@ void ft_pwd(ev_list *env);
 // void ft_exit(t_cmd *cmd);
 void ft_exit(t_cmd *cmd);
 // void ft__exit(t_cmd *cmd);
-void    checkErrer(t_cmd *cmd,ev_list *env);
+int    checkErrer(t_cmd *cmd,ev_list *env);
 char **get_path(ev_list *env,t_cmd *cmd);
 int ft_strcmp(char *s1, char *s2);
 char *access_ve(char **path,t_cmd *cmd);
 char	*ft_join2(char *s1, char *s2);
 void    sighandler(int sig);
+char **ParsExport(char *input);
 
 /*expand*/
 char* replace_env_vars(const char* input);

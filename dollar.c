@@ -1,7 +1,13 @@
 #include "minishell.h"
 
+
 size_t calculate_required_length(const char* input) 
 {
+    // if (strstr(input,"export"))
+    // {
+    //     ParsExport((char *)input);
+    // }
+        
     size_t total_length = 0;
     while (*input) 
     {

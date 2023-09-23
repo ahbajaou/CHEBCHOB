@@ -28,6 +28,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	char			*new;
 
 	i = 0;
+	// printf("<<<<<%s>>>>>\n",s);
+	// printf("start = %d len = %ld",start,len);
 	if (start > ft_strlen((char *)s))
 		len = 0;
 	while (i < len && s[i])

@@ -42,7 +42,7 @@ void    Errexit(t_cmd *cmd)
 void    Errcd(t_cmd *cmd)
 {
     if (chdir(cmd->args[0]))
-        printf("No such file or directory\n");
+        printf("cd Nosuch file or directory\n");
 }
 void    GetPath(t_cmd *cmd,ev_list *env , int i)
 {
@@ -80,14 +80,30 @@ void    ErreDoc(t_cmd *cmd,ev_list *env)
         i++;
     GetPath(cmd,env,i);
 }
-void    checkErrer(t_cmd *cmd,ev_list *env)
+int    checkErrer(t_cmd *cmd,ev_list *env)
 {
+    if (!cmd->name)
+    {
+        printf("bash: syntax error\n");
+        return (0);
+    }
     if (ft_strcmp(cmd->name,"exit") == 0)
+    {
         Errexit(cmd);
+        return (0);
+    }
     else if (ft_strcmp(cmd->name,"cd") == 0)
+    {
         Errcd(cmd);
+        return (0);
+    }
     else if (strstr(cmd->name,"../") || ft_strcmp(cmd->name,"./Makefile") == 0)
+    {
         ErreDoc(cmd,env);
+        return (0);
+    }
+    
+    return (1);
     // else if (ft_strcmp(cmd->name,"unset") == 0)
     //     ErrUnset(cmd,env);
 }

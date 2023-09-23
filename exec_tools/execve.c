@@ -19,6 +19,16 @@ char    *execve_cmd(t_cmd *cmd, ev_list *env)
     char **path = get_path(env,cmd);
     char *p = access_ve(path,cmd);
     if (!p)
-        printf("%s : command not found\n",cmd->name);
+    {
+        // if ((cmd->name[0] >= 'a' && cmd->name[0] <= 'z') || (cmd->name[0] >= 'A' && cmd->name[0] <= 'Z')
+        // || (cmd->name[0] >= '0' && cmd->name[0] <= '9'))
+        // {
+        //     printf("%s : command not found\n",cmd->name);
+        //     return (p);
+        // }
+        // else
+        //     printf("bash: syntax error\n");
+
+    }
     return (p);
 }

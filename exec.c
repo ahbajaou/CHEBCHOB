@@ -54,6 +54,7 @@ void redir(t_cmd *cmd)
     }
     if (cmd->redirection == 2)
     {
+        printf("--------------------------------\n");
         cmd->outf = open(cmd->redirection_file, O_CREAT | O_RDWR ,0644);
         dup2(cmd->outf,STDOUT_FILENO);
         close(cmd->outf);
@@ -119,6 +120,8 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
     // int flag = 0;
     int fd[2];
     // _global_status g_exit;
+    if (checkErrer(cmd,*env) == 0)
+    return ;
     if (cmd->next == NULL)
     {
         if (checkbuilt(cmd,env) == 1)
@@ -133,7 +136,8 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
             return ;
         }
         g_exit._exit = 0;
-        checkErrer(cmd,*env);
+        if (checkErrer(cmd,*env) == 0)
+            return ;
         cmd->vex = execve_cmd(cmd,*env);
         cmd->pid = fork();
         if (cmd->pid == -1)
@@ -154,22 +158,22 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
                 dup2(fd[1],STDOUT_FILENO);
                 close(fd[1]);
             }
+            close(fd[0]);
             herdoc(cmd,env);
             redir(cmd);
-            close(fd[0]);
+            if (check_builting(cmd,env) != 1)
+            {
                 if (!cmd->vex)
                 {
                     free((char *)cmd->vex);
                     return ;
                 }
-            if (check_builting(cmd,env) != 1)
-            {
                 if (!execve(cmd->vex,args1,(char **)env))
                     perror("execve");
             }
             exit(1);
         }
-        free((char *)cmd->vex);
+        // free((char *)cmd->vex);
         if (fdd != 0)
             close(fdd);
         fdd = fd[0];

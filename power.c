@@ -26,7 +26,8 @@ void add_argument(t_cmd *command, char *arg)
 
 void set_redirection(t_cmd *command, char *filename, t_redirection redirection) 
 {
-    if (!command) {
+    if (!command)
+    {
         fprintf(stderr, "Erreur : la commande est NULL.\n");
         return;
     }
