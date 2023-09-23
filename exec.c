@@ -120,10 +120,10 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
     // int flag = 0;
     int fd[2];
     // _global_status g_exit;
-    if (checkErrer(cmd,*env) == 0)
-    return ;
     if (cmd->next == NULL)
     {
+        if (checkErrer(cmd,*env) == 0)
+        return ;
         if (checkbuilt(cmd,env) == 1)
             return ;
     }
@@ -136,8 +136,8 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
             return ;
         }
         g_exit._exit = 0;
-        if (checkErrer(cmd,*env) == 0)
-            return ;
+        // if (checkErrer(cmd,*env) == 0)
+        //     return ;
         cmd->vex = execve_cmd(cmd,*env);
         cmd->pid = fork();
         if (cmd->pid == -1)

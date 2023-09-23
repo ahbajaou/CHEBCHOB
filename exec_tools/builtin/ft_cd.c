@@ -27,26 +27,32 @@ void _exec_cd(ev_list **env,char *name)
     if (getcwd(cwd, sizeof(cwd)) != NULL)
         update_path(*env,NULL,cwd);
 }
-void    ft_cd(t_cmd *cmd, ev_list **env)
+char *_getenv(ev_list **env)
 {
     ev_list *tmp;
-
     tmp = *env;
+    while (tmp)
+    {
+        if (ft_strcmp(tmp->key,"HOME") == 0)
+            return (tmp->value);
+        tmp = tmp->next;
+    }
+    free(tmp);
+    return (NULL);
+}
+void    ft_cd(t_cmd *cmd, ev_list **env)
+{
     if (ft_strcmp("..", cmd->args[0]) == 0)
         _exec_cd(env,"..");
     else if (ft_strcmp("~", cmd->args[0]) == 0 || !cmd->args[0])
     {
-        while (tmp)
+        char *path = _getenv(env);
+        if (!path)
         {
-            if (ft_strcmp(tmp->key,"HOME") != 0)
-            {
-                printf("bash: cd: HOME not set\n");
-                return ;
-            }
-            tmp = tmp->next;
+            printf("bash: cd: HOME not set\n");
+            return ;
         }
-        free(tmp);
-        _exec_cd(env,getenv("HOME"));
+        _exec_cd(env,path);
     }
     else
         _exec_cd(env,cmd->args[0]);
