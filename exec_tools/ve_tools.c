@@ -29,7 +29,6 @@ char **get_path(ev_list *env,t_cmd *cmd)
     }
     if (!path)
     {
-        // printf("No such file or directory\n");
         free(tmp);
         tmp = NULL;
         return NULL;
@@ -43,39 +42,23 @@ char **get_path(ev_list *env,t_cmd *cmd)
 
 char *access_ve(char **path,t_cmd *cmd)
 {
-
-    // t_cmd *tmp;
-
-    // tmp = cmd;
     int i = 0;
     char *current;
-    // char *p;
     if (!path)
-    {
         return NULL;
-    }
-    // while (tmp)
-    // {
-        while (path[i])
+    while (path[i])
+    {
+        current = ft_join2(path[i],"/");
+        current = ft_join2(current,cmd->name);
+        if (!access(current,F_OK))
         {
-            current = ft_join2(path[i],"/");
-            current = ft_join2(current,cmd->name);
-            if (!access(current,F_OK))
-            {
-                free4free(path + i + 1);
-                free(path);
-                // free(p);
-                return (current);
-            }
-            // if (access(current,F_OK))
-            free(current);
-            i++;
+            free4free(path + i + 1);
+            free(path);
+            return (current);
         }
-    //     tmp = tmp->next;
-    // }
+        free(current);
+        i++;
+    }
     free(path);
-    // free(tmp);
-    // free(current);
-    // tmp = NULL;
     return (NULL);
 }

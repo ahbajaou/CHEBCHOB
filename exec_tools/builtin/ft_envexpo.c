@@ -97,7 +97,7 @@ int check_double(ev_list **env, char *key, char *value)
     return (1);
 }
 
-char *scipeq(char *str,char sep)
+char *skipeq(char *str,char sep)
 {
     int i = 0;
     while (str[i])
@@ -115,13 +115,14 @@ int    checkexpo(char *key,char *value,ev_list **env)
 {
     ev_list *tmp;
     tmp = *env;
+    char *j;
     while (tmp)
     {
         if (ft_strcmp(tmp->key,key) == 0 && ft_strcmp(tmp->value,value) != 0)
         {
             if (*value == 0)
                 return (0);
-            char *j = ft_join2(tmp->value,value);
+            j = ft_join2(tmp->value,value);
             delet_expo(env, key, value);
             addback(env, key_value(key, j));
             free(j);
@@ -129,8 +130,21 @@ int    checkexpo(char *key,char *value,ev_list **env)
         }
         tmp = tmp->next;
     }
+    // free(j);
     free(tmp);
     return (1);
+}
+char *parsq(char *value)
+{
+    if (!value)
+        return (NULL);
+    if (value[0] == '"' || value[0] == '\'')
+    {
+        int sz = ft_len(value) ;
+        value[sz - 1] = '\0';
+        return (value + 1);
+    }
+    return (value);
 }
 void expo_pars(char *str,char *str1,ev_list **env)
 {
@@ -141,14 +155,15 @@ void expo_pars(char *str,char *str1,ev_list **env)
         printf("export : not a valid identifier : %s\n",str);
         return ;
     }
+    char *value = parsq(str1);
     if (checkjoin(str) == 1)
     {
         int sz = ft_len(str);
         str[sz - 1] = '\0';
-        if (checkexpo(str,str1,env) == 0)
+        if (checkexpo(str,value,env) == 0)
             return ;
     }
-    addback(env, key_value(str, str1));
+    addback(env, key_value(str, value));
     return ;
 }
 char   *joinexpo(char *str)
@@ -157,9 +172,9 @@ char   *joinexpo(char *str)
     while (str[i])
     {
         if (str[i] == '+' && str[i + 1] == '=')
-            return (scipeq(str + i,'='));
+            return (skipeq(str + i,'='));
         if (str[i] == '=')
-            return(scipeq(str + i, '='));
+            return(skipeq(str + i, '='));
         i++;
     }
     return (str);
@@ -171,6 +186,7 @@ void add_expo(char **str, ev_list **env)
 
     i = 0;
     (void)env;
+    char *pl;
     tmp = NULL;
     
     if (str[i][0] == '=')
@@ -180,13 +196,14 @@ void add_expo(char **str, ev_list **env)
     }
     while (str[i])
     {
-        char *pl = joinexpo(str[i]);
+        pl = joinexpo(str[i]);
         tmp = ft_split(str[i], '=');
         if (check_double(env, tmp[0], pl))
             expo_pars(tmp[0], pl,env);
         i++;
     }
     free4free(tmp);
+    free(tmp);
 }
 void ft_env(ev_list *env, t_cmd *cmd)
 {

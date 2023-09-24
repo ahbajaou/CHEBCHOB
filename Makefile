@@ -6,12 +6,12 @@ CFILES = main.c lexer.c power.c func.c exec.c exec_tools/*.c exec_tools/builtin/
 # CC = clang 
 CC = gcc -g
 
-CFLAGS = -Wall -Wextra -Werror  -lreadline -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror  -lreadline -fsanitize=address -g3
 
 all :  $(NAMES)
 
 $(NAMES) : $(CFILES)
-			$(CC) $(CFLAGS) $(CFILES)   -o minishell
+			$(CC)  $(CFILES) $(CFLAGS)  -o minishell
 
 clean : 
 		$(RM) $(NAMES)

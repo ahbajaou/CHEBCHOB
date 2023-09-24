@@ -22,7 +22,7 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft__substr(char const *s, unsigned int start, size_t len)
 {
 	unsigned int	i;
 	char			*new;
@@ -31,7 +31,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	// printf("<<<<<%s>>>>>\n",s);
 	// printf("start = %d len = %ld",start,len);
 	if (start > ft_strlen((char *)s))
-		len = 0;
+		return (strdup(""));
 	while (i < len && s[i])
 		i++;
 	new = malloc (i + 1);
@@ -46,6 +46,31 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	}
 	new[i] = '\0';
 	return (new);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	i;
+	char	*str;
+
+	i = 0;
+	if (!s)
+		return (NULL);
+	if (start > ft_strlen(s))
+		return (strdup(""));
+	if (len > ft_strlen(s + start))
+		return (strdup(s + start));
+	str = malloc (sizeof(char) * (len + 1));
+	if (!str)
+		return (NULL);
+	while (s[start] != '\0' && i < len)
+	{
+		str[i] = s[start];
+		start++;
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
 }
 
 int	count_c(const char *str, char c, int i)
@@ -100,7 +125,18 @@ char	**ft_split( char *s, char c)
 		while (s[sp] && s[sp] == c)
 			sp++;
 		x = count_c(s, c, sp);
-		spl[i] = ft_substr(s, sp, x);
+		spl[i] = ft__substr(s, sp, x);
+		if (!spl[i]) 
+		{
+		// Libérer la mémoire déjà allouée
+			while (i > 0) 
+			{
+				i--;
+				free(spl[i]);
+			}
+			free(spl);
+			return (NULL);
+		}
 		sp += x + 1;
 		i++;
 	}

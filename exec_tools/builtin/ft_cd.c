@@ -9,9 +9,15 @@ void    update_path(ev_list *env, char *old,char *new)
     while (tmp)
     {
         if (ft_strcmp("PWD", tmp->key) == 0 && new != NULL)
+        {
+            free(tmp->value);
             tmp->value = ft__strdup(new);
+        }
         if (ft_strcmp("OLDPWD", tmp->key) == 0 && old != NULL)
+        {
+            free(tmp->value);
             tmp->value = ft__strdup(old);
+        }
         tmp = tmp->next;
     }
     free(tmp);
@@ -22,8 +28,7 @@ void _exec_cd(ev_list **env,char *name)
     char cwd[256];
     if (getcwd(cwd, sizeof(cwd)) != NULL)
         update_path(*env,cwd,NULL);
-    if (chdir(name))
-        printf("cd No such file or directory\n");
+    chdir(name);
     if (getcwd(cwd, sizeof(cwd)) != NULL)
         update_path(*env,NULL,cwd);
 }

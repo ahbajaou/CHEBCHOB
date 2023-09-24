@@ -1,114 +1,123 @@
 #include "../../minishell.h"
 
 
-static int count_strings2(const char *s, char c)
-{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+static int count_strings2(const char *s, char c) {
     int count = 0;
-    int quotes = 0;
+    int flag = 0;
 
-    while (*s != '\0')
-    {
+    while (*s != '\0') {
         if (*s == '"')
-            quotes = !quotes;
+            flag = !flag;
 
-        if (*s == c && !quotes)
+        if (*s == c && !flag)
             count++;
         s++;
     }
     return count + 1;
 }
 
-static char *allocation_string2(const char *s, char c)
-{
+static char *allocation_string2(const char *s, char c) {
     int len = 0;
-    int quotes = 0;
-
-    while (s[len] != '\0')
-    {
+    int flag = 0;
+    char *str;
+    int i = 0;
+    
+    while (s[len] != '\0') {
         if (s[len] == '"')
-            quotes = !quotes; 
+            flag = !flag;
 
-        if (s[len] == c && !quotes)
+        if (s[len] == c && !flag)
             break;
         len++;
     }
-
-    char *str = (char *)malloc(len + 1);
+    str = (char *)malloc(len + 1);
     if (!str)
         return NULL;
-
-    for (int i = 0; i < len; i++)
+    
+    while (i < len) {
         str[i] = s[i];
+        i++;
+    }
     str[len] = '\0';
-
     return str;
 }
 
-static char **ft_free2(char **strings, size_t i)
-{
-    while (i > 0)
-    {
-        free(strings[i - 1]);
+static char **ft_free2(char **str, size_t i) {
+    while (i > 0) {
+        free(str[i - 1]);
         i--;
     }
-    free(strings);
+    free(str);
     return NULL;
 }
 
-char **SplitExpo(char const *s, char c)
-{
-    char **strings;
-    size_t i;
+char **SplitExpo(const char *s, char c) {
+    char **str;
+    size_t i = 0;
 
     if (s == NULL)
         return NULL;
-    int quotes = 0;
-    i = 0;
-    strings = (char **)malloc(sizeof(char *) * (count_strings2(s, c) + 1));
-    if (!strings)
+    int flag = 0;
+    str = (char **)malloc(sizeof(char *) * (count_strings2(s, c) + 1));
+    if (!str)
         return NULL;
-
-
-    while (*s != '\0')
-    {
+    
+    while (*s != '\0') {
         if (*s == '"')
-            quotes = !quotes;
+            flag = !flag;
 
-        while (*s != '\0' && *s == c && !quotes)
+        while (*s != '\0' && *s == c && !flag)
             s++;
 
-        if (*s != '\0')
-        {
-            strings[i] = allocation_string2(s, c);
-            if (!strings[i])
-                return ft_free2(strings, i);
+        if (*s != '\0') {
+            str[i] = allocation_string2(s, c);
+            if (!str[i]) {
+                ft_free2(str, i);
+                return NULL;
+            }
             i++;
         }
 
-        while (*s != '\0' && (*s != c || quotes))
-        {
+        while (*s != '\0' && (*s != c || flag)) {
             if (*s == '"')
-                quotes = !quotes;
+                flag = !flag;
             s++;
         }
     }
-    strings[i] = NULL;
-    return strings;
+    str[i] = NULL;
+    return str;
 }
-char **ParsExport(char *input)
+
+void freeSplitExpo(char **str)
 {
     int i = 0;
-    char **spl;
-    spl = NULL;
-    if (strstr(input,"export"))
+    if (str == NULL)
+        return;
+    while (str[i])
+    {
+        free(str[i]);
+        i++;
+    }
+    free(str);
+}
+
+char **ParsExport(char *input) {
+    int i = 0;
+    char **spl = NULL;
+
+    if (strstr(input, "export")) 
     {
         while (input[i] != ' ' && input[i] != '\0')
             i++;
-        char *str = ft__strdup(input + i);
-        spl = SplitExpo(str,' ');
+        char *str = strdup(input + i);
+        spl = SplitExpo(str, ' ');
         free(str);
-        return (spl);
-
+        return spl;
     }
-    return (spl);
+
+    return NULL;
 }

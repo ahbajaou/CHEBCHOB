@@ -26,7 +26,7 @@ typedef struct s_cmd
 {
     int outf;
     int inf;
-    const char  *vex;
+    char  *vex;
     char **Expo;
     int  pid;
     int herd;
@@ -45,6 +45,12 @@ typedef struct e_list
     char *value;
     struct e_list *next;
 }   ev_list;
+
+typedef struct global_status
+{
+    int _exit;
+
+}global_status;
 /*lexer*/
 
 
@@ -93,9 +99,15 @@ char *access_ve(char **path,t_cmd *cmd);
 char	*ft_join2(char *s1, char *s2);
 void    sighandler(int sig);
 char **ParsExport(char *input);
+char	*get_next_line(int fd);
+void freeSplitExpo(char **str);
+int checkbuilt2(t_cmd *cmd, ev_list **env);
 
 /*expand*/
 char* replace_env_vars(const char* input);
 int check_quotes(const char* input);
 char* read_input_with_quotes();
+
+/*free*/
+void free_command(t_cmd* command);
 #endif

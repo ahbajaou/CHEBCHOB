@@ -2,8 +2,8 @@
 
 #include "minishell.h"
 
-// struct _global_status;
-// struct global_status g_exit;
+extern struct global_status g_exit;
+
 
 void    free4free(char **tmp)
 {
@@ -36,7 +36,10 @@ ev_list	*_env(char **envp)
 void    sighandler(int sig)
 {
     if (sig == SIGINT)
-        printf("\nminishell: ");
+    {
+        printf("\n");
+        printf("minishell: ");
+    }
     // if (sig == SIGQUIT)
     //     exit(1);
 }
@@ -48,9 +51,8 @@ int main(int ac,char **av,char **envp)
     t_cmd *commands = NULL;
     ev_list *env = _env(envp);
     signal(SIGINT,sighandler);
-    // signal(SIGQUIT,sighandler);
+    signal(SIGQUIT,sighandler);
 
-    // g_exit._exit = 0;
     while(1)
     {
         char *str = readline("minishell: ");
@@ -62,6 +64,7 @@ int main(int ac,char **av,char **envp)
             continue;
         }
         add_history(str);
+        // g_exit._exit = 0;
 
         // Gestion des guillemets non fermés
         while (!check_quotes(str))
@@ -82,12 +85,23 @@ int main(int ac,char **av,char **envp)
         }
         commands = parse_input(replaced_str);
         commands->Expo = ParsExport(str);
-        print_commands(commands);
+        // print_commands(commands);
         exec_cmd(commands, &env, envp);
         free(replaced_str);
         free(str);
-        // free(commands->name);
-        free(commands);
+        if (commands->Expo)
+        {
+            int i = 0;
+            while (commands->Expo[i])
+                i++;
+            freeSplitExpo(commands->Expo);
+        }
+        t_cmd* temp = commands;
+        while (temp) 
+        {
+            t_cmd* next = temp->next;
+            free_command(temp);
+            temp = next;
+        }
     }
-    // free(env);
 }

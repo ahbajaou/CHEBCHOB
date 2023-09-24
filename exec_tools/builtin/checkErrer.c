@@ -2,7 +2,7 @@
 #include "../../minishell.h"
 
 
-void    Errexit(t_cmd *cmd)
+int    Errexit(t_cmd *cmd)
 {
     int i = 0;
     int j = 0;
@@ -10,10 +10,11 @@ void    Errexit(t_cmd *cmd)
     while (cmd->args[i])
     {
 
-        if (((cmd->args[i][0] >= 'a' && cmd->args[i][0] <= 'z') && i == 0 ) || ((cmd->args[i][0] >= 'A' && cmd->args[i][0] <= 'Z') && i == 0))
+        if (((cmd->args[i][0] >= 'a' && cmd->args[i][0] <= 'z') && i == 0 ) ||
+            ((cmd->args[i][0] >= 'A' && cmd->args[i][0] <= 'Z') && i == 0))
         {
             printf("exit: %s: numeric argument required\n",cmd->args[i]);
-            return ;
+            return (1);
 
         }
         j = 0;
@@ -27,22 +28,25 @@ void    Errexit(t_cmd *cmd)
             if (m > 1)
             {
                 printf("exit: %s: numeric argument required\n",cmd->args[i]);
-                    return ;
+                return (1);    
             }
             j++;
         }
         i++;
     }
-        if (i > 1)
-        {
-            printf("exit: too many arguments\n");
-            return ;
-        }
+    if (i > 1)
+    {
+        printf("exit: too many arguments\n");
+        return (1);
+    }
+    return (0);
 }
 void    Errcd(t_cmd *cmd)
 {
+    if (!cmd->args[0])
+        return ;
     if (chdir(cmd->args[0]))
-        printf("cd Nosuch file or directory\n");
+        printf("%s No such file or directory\n",cmd->args[0]);
 }
 void    GetPath(t_cmd *cmd,ev_list *env , int i)
 {
@@ -82,28 +86,31 @@ void    ErreDoc(t_cmd *cmd,ev_list *env)
 }
 int    checkErrer(t_cmd *cmd,ev_list *env)
 {
-    if (!cmd->name)
+    if (cmd->name)
     {
-        printf("bash: syntax error\n");
-        return (0);
+        if (ft_strcmp(cmd->name,"exit") == 0)
+        {
+            if (Errexit(cmd) == 1)
+                return (1);
+            return (0);
+        }
+        else if (ft_strcmp(cmd->name,"cd") == 0)
+        {
+            Errcd(cmd);
+            return (0);
+        }
+        else if (strstr(cmd->name,"../") || ft_strcmp(cmd->name,"./Makefile") == 0)
+        {
+            ErreDoc(cmd,env);
+            return (0);
+        }
+        else if (ft_strcmp(cmd->name,"export") == 0)
+            return (0);
+        else if (ft_strcmp(cmd->name,"env") == 0)
+            return (0);
+        else if (ft_strcmp(cmd->name,"unset") == 0)
+            return (0);
     }
-    if (ft_strcmp(cmd->name,"exit") == 0)
-    {
-        Errexit(cmd);
-        return (0);
-    }
-    else if (ft_strcmp(cmd->name,"cd") == 0)
-    {
-        Errcd(cmd);
-        return (0);
-    }
-    else if (strstr(cmd->name,"../") || ft_strcmp(cmd->name,"./Makefile") == 0)
-    {
-        ErreDoc(cmd,env);
-        return (0);
-    }
-    
+            // ErrUnset(cmd,env);
     return (1);
-    // else if (ft_strcmp(cmd->name,"unset") == 0)
-    //     ErrUnset(cmd,env);
 }

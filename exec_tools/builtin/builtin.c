@@ -12,14 +12,19 @@
 
 #include "../../minishell.h"
 
+
+// int checkbuilt2(t_cmd *cmd, ev_list **env)
+// {
+//     if (ft_strcmp("export", cmd->name) == 0)
+//     {
+//         ft_env(*env, cmd);
+//         return (1);
+//     }
+//     return (0);
+// }
 int checkbuilt(t_cmd *cmd, ev_list **env)
 {
 
-    if (ft_strcmp("export", cmd->name) == 0)
-    {
-        ft_env(*env, cmd);
-        return (1);
-    }
     if (ft_strcmp("unset", cmd->name) == 0)
     {
         ft_unset(env, cmd);
@@ -36,6 +41,11 @@ int checkbuilt(t_cmd *cmd, ev_list **env)
         return (1);
     }
     if (ft_strcmp("env", cmd->name) == 0)
+    {
+       ft_env(*env, cmd);
+        return (1);
+    }
+    if (ft_strcmp("export", cmd->name) == 0)
     {
         ft_env(*env, cmd);
         return (1);

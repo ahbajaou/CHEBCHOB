@@ -1,28 +1,64 @@
 #include "minishell.h"
 
 
+// size_t calculate_required_length(const char* input) 
+// {
+//     // if (strstr(input,"export"))
+//     // {
+//     //     ParsExport((char *)input);
+//     // }
+        
+//     size_t total_length = 0;
+//     while (*input) 
+//     {
+//         if (*input == '$') 
+//         {
+//             input++;
+//             char var_name[256];
+//             char* var_start = var_name;
+//             while (*input && (isalnum(*input) || *input == '_')) 
+//                 *var_start++ = *input++;
+//             *var_start = '\0';
+//             char* var_value = getenv(var_name);
+//             if (var_value)
+//                 total_length += strlen(var_value);
+//         } 
+//         else 
+//         {
+//             total_length++;
+//             input++;
+//         }
+//     }
+//     return total_length;
+// }
 size_t calculate_required_length(const char* input) 
 {
-    // if (strstr(input,"export"))
-    // {
-    //     ParsExport((char *)input);
-    // }
-        
     size_t total_length = 0;
     while (*input) 
     {
         if (*input == '$') 
         {
             input++;
-            char var_name[256];
-            char* var_start = var_name;
+            const char *start = input;
             while (*input && (isalnum(*input) || *input == '_')) 
-                *var_start++ = *input++;
-            *var_start = '\0';
+                input++;
+
+            size_t var_name_length = input - start;
+            char* var_name = malloc(var_name_length + 1);
+            if (!var_name) 
+            {
+                perror("malloc");
+                exit(1);
+            }
+            strncpy(var_name, start, var_name_length);
+            var_name[var_name_length] = '\0'; 
+            
             char* var_value = getenv(var_name);
             if (var_value)
                 total_length += strlen(var_value);
-        } 
+            
+            free(var_name); // Libération de la mémoire allouée pour var_name
+        }
         else 
         {
             total_length++;
@@ -88,80 +124,20 @@ char* read_input_with_quotes()
     return full_input;
 }
 
-// char* replace_env_vars(const char* input) 
-// {
-//     size_t required_length = calculate_required_length(input);
-//     char* result = malloc(required_length + 1);
-//     if (!result) 
-//     {
-//         perror("malloc");
-//         exit(1);
-//     }
-    
-//     char* current = result;
-//     char quote_char = '\0';
-//     char prev_char = '\0';  // Ajout d'une variable pour suivre le caractère précédent
 
-//     while (*input) 
-//     {
-//         if (*input == '\'' && quote_char != '"' && prev_char != '\\') 
-//         {
-//             if (quote_char == '\'') 
-//                 quote_char = '\0';
-//             else 
-//                 quote_char = '\'';
-//             input++;
-//         } 
-//         else if (*input == '"' && quote_char != '\'' && prev_char != '\\') 
-//         {
-//             if (quote_char == '"') 
-//                 quote_char = '\0';
-//             else 
-//                 quote_char = '"';
-//             input++;
-//         } 
-//         else if (*input == '$' && quote_char != '\'') 
-//         {
-//             input++;
-//             char var_name[256];
-//             char* var_start = var_name;
-//             while (*input && (isalnum(*input) || *input == '_')) 
-//                 *var_start++ = *input++;
-//             *var_start = '\0';
-//             char* var_value = getenv(var_name);
-//             if (var_value) 
-//             {
-//                 strcpy(current, var_value);
-//                 current += strlen(var_value);
-//             }
-//         } 
-//         else 
-//         {
-//             if (*input == '\\' && (quote_char == '"' || quote_char == '\'') && (input[1] == quote_char)) 
-//             {
-//                 *current++ = input[1];
-//                 input += 2;
-//             } 
-//             else 
-//                 *current++ = *input++;
-//         }
-//         prev_char = *(input - 1);  // Mettre à jour le caractère précédent
-//     }
-//     *current = '\0';
-//     return result;
-// }
 char* replace_env_vars(const char* input) 
 {
     size_t required_length = calculate_required_length(input);
     char* result = malloc(required_length + 1);
-    if (!result) {
+    if (!result) 
+    {
         perror("malloc");
         exit(1);
     }
 
     char* current = result;
     char quote_char = '\0';
-    int is_escaped = 0;  // Utilisé pour suivre si le caractère actuel est échappé
+    int is_escaped = 0;
 
     while (*input) 
     {
@@ -172,21 +148,17 @@ char* replace_env_vars(const char* input)
             continue;
         }
 
-        if (*input == '\'' && !is_escaped && quote_char != '"') 
+        if (!is_escaped && (*input == '\'' || *input == '"')) 
         {
-            if (quote_char == '\'') 
+            if (quote_char == *input) 
                 quote_char = '\0';
             else 
-                quote_char = '\'';
-        } 
-        else if (*input == '"' && !is_escaped && quote_char != '\'') 
-        {
-            if (quote_char == '"') 
-                quote_char = '\0';
-            else 
-                quote_char = '"';
-        } 
-        else if (*input == '$' && quote_char != '\'') 
+                quote_char = *input;
+            input++;
+            continue;
+        }
+
+        if (*input == '$' && quote_char != '\'') 
         {
             input++;
             char var_name[256];
@@ -197,13 +169,10 @@ char* replace_env_vars(const char* input)
             char* var_value = getenv(var_name);
             if (var_value) 
             {
-                strcpy(current, var_value);
+                strncpy(current, var_value, required_length - (current - result));
                 current += strlen(var_value);
             }
-        } 
-        else 
-        {
-            *current++ = *input;
+            continue;
         }
 
         if (*input == '\\') 
@@ -211,8 +180,9 @@ char* replace_env_vars(const char* input)
         else 
             is_escaped = 0;
 
-        input++;
+        *current++ = *input++;
     }
     *current = '\0';
     return result;
 }
+

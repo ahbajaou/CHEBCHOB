@@ -104,7 +104,6 @@ t_cmd* parse_input(char *input)
     char *token, *lasts;
     token = custom(input, " ", &lasts);
     t_cmd *head = NULL, *current = NULL;
-
     while (token != NULL) 
     {
         if (!current) 
@@ -137,3 +136,35 @@ t_cmd* parse_input(char *input)
     }
     return head;
 }
+void free_cmd(t_cmd *cmd) 
+{
+    if (cmd->name) free(cmd->name);
+    for (int i = 0; i < cmd->arg_count; i++) 
+        if (cmd->args[i]) free(cmd->args[i]);
+    free(cmd->args);
+    if (cmd->redirection_file) free(cmd->redirection_file);
+    free(cmd);
+}
+void free_command(t_cmd* command) 
+{
+    if (!command) return;
+
+    if (command->name)
+        free(command->name);
+
+    if (command->args) 
+    {
+        for (int i = 0; i < command->arg_count; i++) 
+        {
+            if (command->args[i])
+                free(command->args[i]);
+        }
+        free(command->args);
+    }
+
+    if (command->redirection_file)
+        free(command->redirection_file);
+
+    free(command);
+}
+
