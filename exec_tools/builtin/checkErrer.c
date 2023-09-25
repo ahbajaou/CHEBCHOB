@@ -15,7 +15,6 @@ int    Errexit(t_cmd *cmd)
         {
             printf("exit: %s: numeric argument required\n",cmd->args[i]);
             return (1);
-
         }
         j = 0;
         while (cmd->args[i][j])

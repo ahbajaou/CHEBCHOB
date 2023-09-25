@@ -1,5 +1,3 @@
-
-
 #include "minishell.h"
 
 extern struct global_status g_exit;
@@ -43,6 +41,7 @@ void    sighandler(int sig)
     // if (sig == SIGQUIT)
     //     exit(1);
 }
+
 int main(int ac,char **av,char **envp)
 {
     (void)ac;
@@ -58,11 +57,6 @@ int main(int ac,char **av,char **envp)
         char *str = readline("minishell: ");
         if (!str)
             exit(1);
-        if (str[0] == '\0')
-        {
-            free(str);
-            continue;
-        }
         add_history(str);
         // g_exit._exit = 0;
 
@@ -70,6 +64,17 @@ int main(int ac,char **av,char **envp)
         while (!check_quotes(str))
         {
             char *continuation = readline("> ");  // Prompt pour la continuation
+            char *str = readline("minishell: ");
+            if (str[0] == '\0')
+            {
+                free(str);
+                continue;
+            }
+            if (!str || strspn(str, " \t\n\r") == strlen(str))
+            {
+                free(str);
+                continue;
+            }
             if (!continuation)
                 break;
             char *old_str = str;
@@ -78,15 +83,16 @@ int main(int ac,char **av,char **envp)
             free(continuation);
         }
         char* replaced_str = replace_env_vars(str);
-        if (!replaced_str)
+       if (!replaced_str || strspn(replaced_str, " \t\n\r") == strlen(replaced_str))
         {
             free(str);
-            continue;  // Si replace_env_vars renvoie NULL, ignorez le reste du traitement
+            if (replaced_str) free(replaced_str);
+            continue;
         }
         commands = parse_input(replaced_str);
         commands->Expo = ParsExport(str);
-        // print_commands(commands);
         exec_cmd(commands, &env, envp);
+        // print_commands(commands);
         free(replaced_str);
         free(str);
         if (commands->Expo)

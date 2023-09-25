@@ -57,7 +57,7 @@ int check_builting(t_cmd *cmd, ev_list **env)
 {
     if (ft_strcmp("echo", cmd->name) == 0)
     {
-        ft_echo(cmd, *env);
+        ft_echo(cmd);
         return (1);
     }
     if (ft_strcmp("pwd", cmd->name) == 0)

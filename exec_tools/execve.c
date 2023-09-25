@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execve.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 02:36:58 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/07/17 04:51:11 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/24 20:16:07 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ char    *execve_cmd(t_cmd *cmd, ev_list *env)
             || ((cmd->name[0] >= 'A' && cmd->name[0] <= 'Z'))
                 || (cmd->name[0] >= '0' && cmd->name[0] <= '9'))
                 {
-                    printf("command not found\n");
+                    error(ERROR_CNF);
                     g_exit._exit = 127;
                 }
         else
         {
-            printf("bash: syntax error\n");
+            error(REDIR_ERROR);
             g_exit._exit = 2;
         }
 

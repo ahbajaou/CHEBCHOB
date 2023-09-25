@@ -61,10 +61,9 @@ int handel_n(char **str)
     }
     return (1);
 }
-void ft_echo(t_cmd *cmd, ev_list *env) 
+void ft_echo(t_cmd *cmd)
 {
-    (void)env;
-        if (handel_n(cmd->args) != 1)
-            exit(0);
+	if (handel_n(cmd->args) != 1)
+		exit(0);
 }
 

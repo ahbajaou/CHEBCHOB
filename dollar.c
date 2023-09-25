@@ -1,36 +1,5 @@
 #include "minishell.h"
 
-
-// size_t calculate_required_length(const char* input) 
-// {
-//     // if (strstr(input,"export"))
-//     // {
-//     //     ParsExport((char *)input);
-//     // }
-        
-//     size_t total_length = 0;
-//     while (*input) 
-//     {
-//         if (*input == '$') 
-//         {
-//             input++;
-//             char var_name[256];
-//             char* var_start = var_name;
-//             while (*input && (isalnum(*input) || *input == '_')) 
-//                 *var_start++ = *input++;
-//             *var_start = '\0';
-//             char* var_value = getenv(var_name);
-//             if (var_value)
-//                 total_length += strlen(var_value);
-//         } 
-//         else 
-//         {
-//             total_length++;
-//             input++;
-//         }
-//     }
-//     return total_length;
-// }
 size_t calculate_required_length(const char* input) 
 {
     size_t total_length = 0;
@@ -57,7 +26,7 @@ size_t calculate_required_length(const char* input)
             if (var_value)
                 total_length += strlen(var_value);
             
-            free(var_name); // Libération de la mémoire allouée pour var_name
+            free(var_name);
         }
         else 
         {
@@ -70,29 +39,36 @@ size_t calculate_required_length(const char* input)
 
 int check_quotes(const char* input) 
 {
-    char quote_char = '\0';  // Utilisé pour suivre le type de guillemets que nous traitons
+    char quote_char = '\0';
+    int is_escaped = 0;
+
     while (*input) 
     {
-        if (*input == '\'' && quote_char != '"') 
+        if (*input == '\\' && (input[1] == '"' || input[1] == '\'')) 
+        {
+            is_escaped = 1;
+            input += 2;
+            continue;
+        }
+        if (!is_escaped && *input == '\'' && quote_char != '"') 
         {
             if (quote_char == '\'') 
                 quote_char = '\0';
             else 
                 quote_char = '\'';
-            input++;
         } 
-        else if (*input == '"' && quote_char != '\'') 
+        else if (!is_escaped && *input == '"' && quote_char != '\'') 
         {
             if (quote_char == '"') 
                 quote_char = '\0';
             else 
                 quote_char = '"';
-            input++;
         } 
-        else 
-            input++;
+        is_escaped = 0;
+        input++;
     }
-    return (quote_char == '\0');  // Retourne 1 si tous les guillemets sont correctement fermés, 0 sinon
+
+    return (quote_char == '\0'); 
 }
 
 char* read_input_with_quotes() 
@@ -104,6 +80,8 @@ char* read_input_with_quotes()
     char* full_input = malloc(1);
     full_input[0] = '\0';
     size_t full_len = 0;
+    char quote_char = '\0';
+    int is_escaped = 0;
 
     while ((read = getline(&line, &len, stdin)) != -1)
     {
@@ -112,17 +90,66 @@ char* read_input_with_quotes()
         full_len += read;
 
         if (full_input[full_len - 1] == '\n') 
+            full_input[full_len - 1] = '\0';
+        for(size_t i = 0; full_input[i] != '\0'; i++)
         {
-            full_input[full_len - 1] = '\0';  // Remove newline
-            if (check_quotes(full_input)) 
-                break;
-            else 
-                printf("> ");  // Prompt for continuation of input
+            if(full_input[i] == '\\' && !is_escaped && (quote_char == '\"' || quote_char == '\0'))
+            {
+                is_escaped = 1;
+                continue;
+            }
+
+            if((full_input[i] == '"' || full_input[i] == '\'') && !is_escaped)
+            {
+                if(quote_char == full_input[i])
+                    quote_char = '\0';
+                else if(quote_char == '\0')
+                    quote_char = full_input[i];
+            }
+
+            if(is_escaped)
+                is_escaped = 0;
         }
+
+        if (quote_char == '\0' && !is_escaped) 
+            break;
+        else 
+            printf("> ");
     }
+
     free(line);
     return full_input;
 }
+
+
+// char* read_input_with_quotes() 
+// {
+//     char* line = NULL;
+//     size_t len = 0;
+//     ssize_t read;
+
+//     char* full_input = malloc(1);
+//     full_input[0] = '\0';
+//     size_t full_len = 0;
+
+//     while ((read = getline(&line, &len, stdin)) != -1)
+//     {
+//         full_input = realloc(full_input, full_len + read + 1);
+//         strcat(full_input, line);
+//         full_len += read;
+
+//         if (full_input[full_len - 1] == '\n') 
+//         {
+//             full_input[full_len - 1] = '\0';  // Remove newline
+//             if (check_quotes(full_input)) 
+//                 break;
+//             else 
+//                 printf("> ");  // Prompt for continuation of input
+//         }
+//     }
+//     free(line);
+//     return full_input;
+// }
 
 
 char* replace_env_vars(const char* input) 
@@ -141,23 +168,33 @@ char* replace_env_vars(const char* input)
 
     while (*input) 
     {
-        if (*input == '\\' && (input[1] == '"' || input[1] == '\'')) 
+        if (*input == '\\' && quote_char == '"' && 
+           (input[1] == '"' || input[1] == '\\' || input[1] == '$'))
         {
             *current++ = input[1];
             input += 2;
             continue;
         }
-
-        if (!is_escaped && (*input == '\'' || *input == '"')) 
+        // Quote handling
+        if (*input == '"' && quote_char != '\'') 
         {
-            if (quote_char == *input) 
+            if (!is_escaped && quote_char == '"') 
                 quote_char = '\0';
-            else 
-                quote_char = *input;
+            else if (!is_escaped) 
+                quote_char = '"';
             input++;
             continue;
         }
-
+        if (*input == '\'' && quote_char != '"') 
+        {
+            if (quote_char == '\'') 
+                quote_char = '\0';
+            else 
+                quote_char = '\'';
+            input++;
+            continue;
+        }
+        // Environment variable
         if (*input == '$' && quote_char != '\'') 
         {
             input++;
@@ -174,15 +211,10 @@ char* replace_env_vars(const char* input)
             }
             continue;
         }
-
-        if (*input == '\\') 
-            is_escaped = !is_escaped;
-        else 
+        if (*input != '\\') 
             is_escaped = 0;
-
         *current++ = *input++;
     }
     *current = '\0';
     return result;
 }
-

@@ -13,6 +13,16 @@
 # include <readline/history.h>
 #include <ctype.h>
 
+typedef enum {
+    ERROR_SYNTAX,
+    ERROR_PIPE,
+    ERROR_DOUBLE_PIPE,
+    REDIR_ERROR,
+    REDIR_ERROR_L1R1,
+    ERROR_CNF,
+
+} ErrorType;
+
 typedef enum e_redirection
 {
     REDIR_NONE,
@@ -21,6 +31,7 @@ typedef enum e_redirection
     REDIR_APPEND,
     REDIR_HEREDOC
 } t_redirection;
+
 
 typedef struct s_cmd 
 {
@@ -33,11 +44,18 @@ typedef struct s_cmd
     int arg_count;
     int pip[2];
     char *name;
+    struct s_redirection *redirections;
     char **args;
     t_redirection redirection;
     char *redirection_file;
     struct s_cmd *next;
 } t_cmd;
+
+typedef struct s_redirection {
+    char *filename;
+    t_redirection redirection_type;
+    struct s_redirection *next;
+} t_redirection_list;
 
 typedef struct e_list
 {
@@ -62,6 +80,7 @@ void handle_pipe(char **token, char **lasts, t_cmd **current);
 void handle_redirection(char **token, char **lasts, t_cmd *current);
 t_cmd* create_command(char *name);
 void add_argument(t_cmd *command, char *arg);
+void add_redirection(t_cmd *command, char *filename, t_redirection redirection);
 
 /*func_sup*/
 char* custom(char* str, char* delims, char** saveptr);
@@ -83,7 +102,7 @@ char    *execve_cmd(t_cmd *cmd, ev_list *env);
 int checkbuilt(t_cmd *cmd, ev_list **env);
 char **get_path(ev_list *env,t_cmd *cmd);
 void    free4free(char **tmp);
-void ft_echo(t_cmd *cmd, ev_list *env);
+void ft_echo(t_cmd *cmd);
 void    ft_unset(ev_list **env, t_cmd *cmd);
 void    ft_cd(t_cmd *cmd, ev_list **env);
 void ft_env(ev_list *env, t_cmd *cmd);
@@ -110,4 +129,7 @@ char* read_input_with_quotes();
 
 /*free*/
 void free_command(t_cmd* command);
+
+/*error*/
+void error(ErrorType type);
 #endif

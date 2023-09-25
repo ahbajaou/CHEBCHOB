@@ -15,46 +15,26 @@
 
 extern struct global_status g_exit;
 
-char *herpath(ev_list **env,char *key,char *file_name)
-{
-    ev_list *tmp;
-
-    tmp = *env;
-    char *p;
-    char *current;
-    while (tmp)
-    {
-        if (ft_strcmp(tmp->key,key) == 0)
-            {
-               
-                current = ft_join2(tmp->value,"/");
-                p = ft_join2(current,file_name);
-                return (p);
-            }
-            tmp = tmp->next;
-    }
-    free(tmp);
-    return NULL;
-}
-
 void redir(t_cmd *cmd)
 {
+     if (!cmd || !cmd->redirections)
+        return;
     int fdd;
-    if (cmd->redirection == 1)
+    if (cmd->redirections->redirection_type == REDIR_INPUT)
     {
-        cmd->inf = open(cmd->redirection_file,O_RDONLY , 0644);
+        cmd->inf = open(cmd->redirections->filename,O_RDONLY , 0644);
         dup2(cmd->inf,STDIN_FILENO);
         close(cmd->inf);
     }
-    if (cmd->redirection == 2)
+    if (cmd->redirections->redirection_type == REDIR_OUTPUT)
     {
-        cmd->outf = open(cmd->redirection_file, O_CREAT | O_RDWR ,0644);
+        cmd->outf = open(cmd->redirections->filename, O_CREAT | O_RDWR ,0644);
         dup2(cmd->outf,STDOUT_FILENO);
         close(cmd->outf);
     }
-    if (cmd->redirection == 3)
+    if (cmd->redirections->redirection_type == REDIR_APPEND)
     {
-        fdd = open(cmd->redirection_file, O_CREAT | O_RDWR | O_APPEND , 0644);
+        fdd = open(cmd->redirections->filename, O_CREAT | O_RDWR | O_APPEND , 0644);
         dup2(fdd,STDOUT_FILENO);
         close(fdd);
     }
@@ -63,8 +43,13 @@ void redir(t_cmd *cmd)
 void    herdoc(t_cmd *cmd,ev_list **env)
 {
     (void)env;
-    char *file_name = "tmp/outfile.txt";
-    if(cmd->redirection == 4)
+    char *file_name = "outfile";
+    if (cmd) 
+    {
+        if (!cmd->redirections) 
+            return;
+    }
+    if (cmd->redirections->redirection_type == REDIR_HEREDOC)
     {
 		//heredoc_signal();
         // signal(SIGINT,sighandler);
@@ -75,7 +60,7 @@ void    herdoc(t_cmd *cmd,ev_list **env)
 		char *line = ft_substr(temp, 0, strlen(temp) - 1);
 		free(temp);
         int open_file = open(file_name,O_CREAT | O_RDWR | O_TRUNC,0644);
-		while (ft_strcmp(line, cmd->redirection_file))
+		while (ft_strcmp(line, cmd->redirections->filename))
 		{
 			write(open_file, line, strlen(line));
 			write(open_file, "\n", 1);
@@ -86,6 +71,8 @@ void    herdoc(t_cmd *cmd,ev_list **env)
 			line = ft_substr(temp, 0, strlen(temp) - 1);
 			free(temp);
 		}
+        if (cmd->redirections->next)
+            return ;
 		close(open_file);
         open_file = open(file_name,O_RDONLY,0644);
         dup2(open_file,STDIN_FILENO);
@@ -98,18 +85,16 @@ void    herdoc(t_cmd *cmd,ev_list **env)
     global_status g_exit;
 void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
 {
+
     (void)env;
     (void)envp;
     (void)cmd;
     int cnt_pipe = 0;
     int j = 0;
     int fdd = 0;
-    // int flag = 0;
     int fd[2];
-    // g_exit._exit = 0;
     while (cmd != NULL)
     {
-        
         cmd->vex = execve_cmd(cmd,*env);
         if (checkErrer(cmd,*env) == 0)
         {
@@ -144,9 +129,13 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
                 dup2(fd[1],STDOUT_FILENO);
                 close(fd[1]);
             }
-            herdoc(cmd,env);
             close(fd[0]);
-            redir(cmd);
+            while (cmd->redirections)
+            {
+                redir(cmd);
+                herdoc(cmd,env);
+                cmd->redirections = cmd->redirections->next;
+            }
             if (check_builting(cmd,env) != 1)
             {
                 if (!cmd->vex)
@@ -155,6 +144,7 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
                     perror("execve");
             }
             exit(1);
+
         }
         free((char *)cmd->vex);
         if (fdd != 0)
@@ -164,7 +154,6 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
 	    cmd = cmd->next;
         cnt_pipe++;
     }
-    // waitpid(cmd->pid,&g_exit._exit,0);
     while (j < cnt_pipe)
     {
         wait(NULL);

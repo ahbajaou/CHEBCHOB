@@ -5,14 +5,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int count_strings2(const char *s, char c) {
+static int count_strings2(const char *s, char c) 
+{
     int count = 0;
     int flag = 0;
 
-    while (*s != '\0') {
+    while (*s != '\0') 
+    {
         if (*s == '"')
             flag = !flag;
-
         if (*s == c && !flag)
             count++;
         s++;
@@ -20,13 +21,15 @@ static int count_strings2(const char *s, char c) {
     return count + 1;
 }
 
-static char *allocation_string2(const char *s, char c) {
+static char *allocation_string2(const char *s, char c) 
+{
     int len = 0;
     int flag = 0;
     char *str;
     int i = 0;
     
-    while (s[len] != '\0') {
+    while (s[len] != '\0') 
+    {
         if (s[len] == '"')
             flag = !flag;
 
@@ -38,7 +41,8 @@ static char *allocation_string2(const char *s, char c) {
     if (!str)
         return NULL;
     
-    while (i < len) {
+    while (i < len) 
+    {
         str[i] = s[i];
         i++;
     }
@@ -46,8 +50,10 @@ static char *allocation_string2(const char *s, char c) {
     return str;
 }
 
-static char **ft_free2(char **str, size_t i) {
-    while (i > 0) {
+static char **ft_free2(char **str, size_t i) 
+{
+    while (i > 0) 
+    {
         free(str[i - 1]);
         i--;
     }
@@ -55,7 +61,8 @@ static char **ft_free2(char **str, size_t i) {
     return NULL;
 }
 
-char **SplitExpo(const char *s, char c) {
+char **SplitExpo(const char *s, char c) 
+{
     char **str;
     size_t i = 0;
 
@@ -66,14 +73,16 @@ char **SplitExpo(const char *s, char c) {
     if (!str)
         return NULL;
     
-    while (*s != '\0') {
+    while (*s != '\0') 
+    {
         if (*s == '"')
             flag = !flag;
 
         while (*s != '\0' && *s == c && !flag)
             s++;
 
-        if (*s != '\0') {
+        if (*s != '\0') 
+        {
             str[i] = allocation_string2(s, c);
             if (!str[i]) {
                 ft_free2(str, i);
@@ -82,7 +91,8 @@ char **SplitExpo(const char *s, char c) {
             i++;
         }
 
-        while (*s != '\0' && (*s != c || flag)) {
+        while (*s != '\0' && (*s != c || flag)) 
+        {
             if (*s == '"')
                 flag = !flag;
             s++;
@@ -105,7 +115,8 @@ void freeSplitExpo(char **str)
     free(str);
 }
 
-char **ParsExport(char *input) {
+char **ParsExport(char *input)
+{
     int i = 0;
     char **spl = NULL;
 

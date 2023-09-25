@@ -2,7 +2,7 @@
 
 char** lexer(char* input) 
 {
-    int size = 64; // par default 
+    int size = 64;
     char** tokens = malloc(size * sizeof(char*));
     if (!tokens) 
         exit(1);
@@ -12,8 +12,8 @@ char** lexer(char* input)
     {
         if (i >= size) 
         {
-            size *= 2; // si le tableau est plein je double la allocation
-            tokens = realloc(tokens, size * sizeof(char*)); // realloc forbiden je le change apres 
+            size *= 2;
+            tokens = realloc(tokens, size * sizeof(char*));
             if (!tokens) 
                 exit(1);
         }
@@ -27,7 +27,7 @@ char** lexer(char* input)
     tokens[i] = NULL;
     return tokens;
 }
-void free_tokens(char** tokens) 
+void free_tokens(char** tokens)
 {
     int i = 0;
     while (tokens[i] != NULL) 
