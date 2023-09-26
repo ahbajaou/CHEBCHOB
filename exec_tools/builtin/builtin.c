@@ -13,25 +13,19 @@
 #include "../../minishell.h"
 
 
-// int checkbuilt2(t_cmd *cmd, ev_list **env)
-// {
-//     if (ft_strcmp("export", cmd->name) == 0)
-//     {
-//         ft_env(*env, cmd);
-//         return (1);
-//     }
-//     return (0);
-// }
+void parentbuilt(t_cmd *cmd, ev_list **env)
+{   
+    if (ft_strcmp("cd", cmd->name) == 0)
+    {
+        ft_cd(cmd,env);
+        return ;
+    }
+}
 int checkbuilt(t_cmd *cmd, ev_list **env)
 {
     if (ft_strcmp("unset", cmd->name) == 0)
     {
         ft_unset(env, cmd);
-        return (1);
-    }
-    if (ft_strcmp("cd", cmd->name) == 0)
-    {
-        ft_cd(cmd,env);
         return (1);
     }
     if (ft_strcmp("exit", cmd->name) == 0)
@@ -49,6 +43,8 @@ int checkbuilt(t_cmd *cmd, ev_list **env)
         ft_env(*env, cmd);
         return (1);
     }
+    if (ft_strcmp("cd", cmd->name) == 0)
+        return (1);
     return (0);
 }
 

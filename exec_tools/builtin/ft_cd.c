@@ -55,7 +55,7 @@ void    ft_cd(t_cmd *cmd, ev_list **env)
         char *path = _getenv(env);
         if (!path)
         {
-            printf("bash: cd: HOME not set\n");
+            printf("minishell: cd: HOME not set\n");
             return ;
         }
         _exec_cd(env,path);

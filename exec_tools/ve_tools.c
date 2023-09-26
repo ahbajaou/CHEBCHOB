@@ -49,7 +49,7 @@ char *access_ve(char **path,t_cmd *cmd)
     while (path[i])
     {
         current = ft_join2(path[i],"/");
-        current = ft_join3(current,cmd->name);
+        current = ft_join2(current,cmd->name);
         if (!access(current,F_OK))
         {
             free4free(path + i + 1);

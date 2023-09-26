@@ -1,5 +1,6 @@
 
 #include "../../minishell.h"
+extern struct global_status	g_exit;
 
 void print_env(ev_list **env, int flag)
 {
@@ -151,6 +152,7 @@ void expo_pars(char *str,char *str1,ev_list **env)
     if (!((str[0] >= 'a' && str[0] <= 'z') || (str[0] >= 'A' && str[0] <= 'Z'))
     || str[0] == '"' || str[0] == '\'')
     {
+        g_exit._exit = 1;
         printf("export : not a valid identifier : %s\n",str);
         return ;
     }
@@ -178,6 +180,7 @@ char   *joinexpo(char *str)
     }
     return (NULL);
 }
+
 void add_expo(char **str, ev_list **env)
 {
     int i;
@@ -206,6 +209,7 @@ void add_expo(char **str, ev_list **env)
     free4free(tmp);
     free(tmp);
 }
+
 void ft_env(ev_list *env, t_cmd *cmd)
 {
     int flag;

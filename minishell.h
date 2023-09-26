@@ -49,8 +49,11 @@ typedef struct s_cmd
 {
 	int						outf;
 	int						inf;
+	int j;
+	int cnt_pipe;
 	char					*vex;
 	char					**Expo;
+	char 					*execve[3];
 	int						pid;
 	int						herd;
 	int						arg_count;
@@ -116,6 +119,7 @@ char						*execve_cmd(t_cmd *cmd, ev_list *env);
 // void exec_cmd(t_cmd *cmd,ev_list **env,char **envp);
 // char **get_path(ev_list *env);
 int							checkbuilt(t_cmd *cmd, ev_list **env);
+void parentbuilt(t_cmd *cmd, ev_list **env);
 char						**get_path(ev_list *env, t_cmd *cmd);
 void						free4free(char **tmp);
 void						ft_echo(t_cmd *cmd);
@@ -124,6 +128,8 @@ void						ft_cd(t_cmd *cmd, ev_list **env);
 void						ft_env(ev_list *env, t_cmd *cmd);
 int							ft_len(char *str);
 void						ft_pwd(ev_list *env);
+void redir(t_cmd *cmd);
+void    herdoc(t_cmd *cmd,ev_list **env);
 // void ft_exit(t_cmd *cmd);
 void						ft_exit(t_cmd *cmd);
 // void ft__exit(t_cmd *cmd);

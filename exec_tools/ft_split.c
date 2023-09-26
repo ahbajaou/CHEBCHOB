@@ -140,5 +140,6 @@ char	**ft_split( char *s, char c)
 		i++;
 	}
 	spl[i] = NULL;
+	// free(s);
 	return (spl);
 }

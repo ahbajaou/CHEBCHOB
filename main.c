@@ -24,7 +24,6 @@ void	free4free(char **tmp)
 		free(tmp[i]);
 		i++;
 	}
-	tmp = NULL;
 }
 ev_list	*_env(char **envp)
 {
@@ -188,7 +187,6 @@ void ft_strchr(char *str , char c)
 }
 int	checkdollar(char *str)
 {
-	// char **ego;
 	int i = 0;
     if (strstr(str, "echo"))
     {
