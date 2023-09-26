@@ -38,6 +38,7 @@ void delet_expo(ev_list **env, char *key,char *value)
     tmp = *env;
     (void)value;
     ev_list *perv;
+    perv = NULL;
     if (env != NULL)
     {
         if (tmp->key != key)
@@ -55,6 +56,7 @@ void delet_expo(ev_list **env, char *key,char *value)
             }
         }
     }
+    free(tmp);
     return ;
 
 }
@@ -90,6 +92,7 @@ int check_double(ev_list **env, char *key, char *value)
             return (0);
         tmp = tmp->next;
     }
+    free(tmp);
     return (1);
 }
 
@@ -144,14 +147,14 @@ char *parsq(char *value)
 }
 void expo_pars(char *str,char *str1,ev_list **env)
 {
-
+    char *value;
     if (!((str[0] >= 'a' && str[0] <= 'z') || (str[0] >= 'A' && str[0] <= 'Z'))
     || str[0] == '"' || str[0] == '\'')
     {
         printf("export : not a valid identifier : %s\n",str);
         return ;
     }
-    char *value = parsq(str1);
+    value = parsq(str1);
     if (checkjoin(str) == 1)
     {
         int sz = ft_len(str);
@@ -188,6 +191,8 @@ void add_expo(char **str, ev_list **env)
     if (str[i][0] == '=')
     {
         printf("export : not a valid identifier : %s\n",str[i]);
+        free4free(str);
+        free(str);
         return ;
     }
     while (str[i])

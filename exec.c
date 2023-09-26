@@ -40,6 +40,14 @@ void redir(t_cmd *cmd)
     }
 }
 
+// void    heredoc_signal(int sig)
+// {
+//     if (sig == SIGQUIT)
+//         {
+//             g_exit._exit = 0;
+//             exit(0);
+//         }
+// }
 void    herdoc(t_cmd *cmd,ev_list **env)
 {
     (void)env;
@@ -51,9 +59,8 @@ void    herdoc(t_cmd *cmd,ev_list **env)
     }
     if (cmd->redirections->redirection_type == REDIR_HEREDOC)
     {
-		//heredoc_signal();
         // signal(SIGINT,sighandler);
-        signal(SIGQUIT,sighandler);
+        // signal(SIGQUIT,heredoc_signal);
 		char *temp = get_next_line(0);
 		if (!temp)
 			exit(0);
@@ -96,6 +103,9 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
     while (cmd != NULL)
     {
         cmd->vex = execve_cmd(cmd,*env);
+        if (!cmd->vex)
+            cmd->vex = ft__strdup(cmd->name);
+        char *args1[] = {cmd->name,cmd->args[0], NULL};
         if (checkErrer(cmd,*env) == 0)
         {
             if (cmd->vex)
@@ -104,7 +114,6 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
                 return ;
             return ;
         }
-        char *args1[] = {cmd->name,cmd->args[0], NULL};
         if (pipe(fd) == -1)
         {
             perror("pipe");
@@ -146,7 +155,8 @@ void exec_cmd(t_cmd *cmd,ev_list **env,char **envp)
             exit(1);
 
         }
-        free((char *)cmd->vex);
+        if(cmd->vex)
+            free((char *)cmd->vex);
         if (fdd != 0)
             close(fdd);
         fdd = fd[0];

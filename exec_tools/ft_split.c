@@ -126,9 +126,9 @@ char	**ft_split( char *s, char c)
 			sp++;
 		x = count_c(s, c, sp);
 		spl[i] = ft__substr(s, sp, x);
+		sp += x + 1;
 		if (!spl[i]) 
 		{
-		// Libérer la mémoire déjà allouée
 			while (i > 0) 
 			{
 				i--;
@@ -137,7 +137,6 @@ char	**ft_split( char *s, char c)
 			free(spl);
 			return (NULL);
 		}
-		sp += x + 1;
 		i++;
 	}
 	spl[i] = NULL;

@@ -24,7 +24,6 @@
 // }
 int checkbuilt(t_cmd *cmd, ev_list **env)
 {
-
     if (ft_strcmp("unset", cmd->name) == 0)
     {
         ft_unset(env, cmd);

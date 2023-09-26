@@ -61,7 +61,7 @@ static char **ft_free2(char **str, size_t i)
     return NULL;
 }
 
-char **SplitExpo(const char *s, char c) 
+char **SplitExpo(const char *s, char c)
 {
     char **str;
     size_t i = 0;
@@ -119,6 +119,7 @@ char **ParsExport(char *input)
 {
     int i = 0;
     char **spl = NULL;
+    // char **ego = NULL;
 
     if (strstr(input, "export")) 
     {
@@ -129,6 +130,5 @@ char **ParsExport(char *input)
         free(str);
         return spl;
     }
-
     return NULL;
 }

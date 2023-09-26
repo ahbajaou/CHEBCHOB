@@ -2,7 +2,7 @@
 
 #include "../../minishell.h"
 
-int       delet_unset(ev_list **env,char *key)
+void       delet_unset(ev_list **env,char *key)
 {
     ev_list *tmp;
     ev_list *perv;
@@ -23,7 +23,7 @@ int       delet_unset(ev_list **env,char *key)
                     free(tmp->next->value);
                     tmp->next = tmp->next->next;
                     free(perv);
-                    return (1);
+                    return ;
                 }
                 tmp = tmp->next;
             }
@@ -34,10 +34,9 @@ int       delet_unset(ev_list **env,char *key)
             (*env) = (*env)->next;
             free(tmp->key);
             free(tmp->value);
-            return (1);
+            return ;
         }
     }
-    return (0);
 }
 
 void    ft_unset(ev_list **env, t_cmd *cmd)
@@ -45,9 +44,8 @@ void    ft_unset(ev_list **env, t_cmd *cmd)
     int i = 0;
         while (cmd->args[i])
         {
-            if (delet_unset(env,cmd->args[i]) == 1)
-                return ;
-            
+
+            delet_unset(env,cmd->args[i]);
             i++;
         }
 

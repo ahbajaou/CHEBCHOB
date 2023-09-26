@@ -64,6 +64,6 @@ int handel_n(char **str)
 void ft_echo(t_cmd *cmd)
 {
 	if (handel_n(cmd->args) != 1)
-		exit(0);
+		return ;
 }
 

@@ -34,15 +34,16 @@ char    *execve_cmd(t_cmd *cmd, ev_list *env)
             || ((cmd->name[0] >= 'A' && cmd->name[0] <= 'Z'))
                 || (cmd->name[0] >= '0' && cmd->name[0] <= '9'))
                 {
-                    error(ERROR_CNF);
+                    error(ERROR_CNF,cmd);
                     g_exit._exit = 127;
+                    return (NULL);
                 }
         else
         {
-            error(REDIR_ERROR);
+            error(REDIR_ERROR,cmd);
             g_exit._exit = 2;
+            return (NULL);
         }
-
         return (NULL);
     }
     return (p);

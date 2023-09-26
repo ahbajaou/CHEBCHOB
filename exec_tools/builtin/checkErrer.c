@@ -1,6 +1,7 @@
 
 #include "../../minishell.h"
 
+extern struct global_status	g_exit;
 
 int    Errexit(t_cmd *cmd)
 {
@@ -14,6 +15,7 @@ int    Errexit(t_cmd *cmd)
             ((cmd->args[i][0] >= 'A' && cmd->args[i][0] <= 'Z') && i == 0))
         {
             printf("exit: %s: numeric argument required\n",cmd->args[i]);
+            exit(0);
             return (1);
         }
         j = 0;
@@ -27,6 +29,7 @@ int    Errexit(t_cmd *cmd)
             if (m > 1)
             {
                 printf("exit: %s: numeric argument required\n",cmd->args[i]);
+                // exit(0);
                 return (1);    
             }
             j++;
@@ -35,6 +38,7 @@ int    Errexit(t_cmd *cmd)
     }
     if (i > 1)
     {
+        g_exit._exit = 1;
         printf("exit: too many arguments\n");
         return (1);
     }
@@ -45,7 +49,10 @@ void    Errcd(t_cmd *cmd)
     if (!cmd->args[0])
         return ;
     if (chdir(cmd->args[0]))
+    {
+        g_exit._exit = 127;
         printf("%s No such file or directory\n",cmd->args[0]);
+    }
 }
 void    GetPath(t_cmd *cmd,ev_list *env , int i)
 {
@@ -63,11 +70,17 @@ void    GetPath(t_cmd *cmd,ev_list *env , int i)
     while (spl[p])
         p++;
     if (ft_strcmp(cmd->name,"./Makefile") == 0)
+    {
+        g_exit._exit = 126;
         printf("permission denied\n");
+    }
     else if (ft_strcmp(spl[p - 1] , cmd->name + i) != 0)
-        printf("%s : No such file or directory\n",cmd->name + i);
+        error(ERROR_DOC,cmd);
     else
+    {
+        g_exit._exit = 126;
         printf("%s : : Is a directory\n",cmd->name + i);
+    }
     free4free(spl);
     free(spl);
     free(tmp);
