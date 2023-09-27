@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 22:48:51 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/26 20:24:46 by bel-kase         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:36:41 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	parentbuilt(t_cmd *cmd, ev_list **env)
+void	parentbuilt(t_cmd *cmd, t_list **env)
 {
 	if (ft_strcmp("cd", cmd->name) == 0)
 	{
@@ -21,7 +21,7 @@ void	parentbuilt(t_cmd *cmd, ev_list **env)
 	}
 }
 
-int	checkbuilt(t_cmd *cmd, ev_list **env)
+int	checkbuilt(t_cmd *cmd, t_list **env)
 {
 	if (ft_strcmp("unset", cmd->name) == 0)
 	{
@@ -48,7 +48,7 @@ int	checkbuilt(t_cmd *cmd, ev_list **env)
 	return (0);
 }
 
-int	check_builting(t_cmd *cmd, ev_list **env)
+int	check_builting(t_cmd *cmd, t_list **env)
 {
 	if (ft_strcmp("echo", cmd->name) == 0)
 	{

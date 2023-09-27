@@ -6,15 +6,15 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 13:41:51 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/27 13:43:38 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:35:16 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	checkexpo(char *key, char *value, ev_list **env)
+int	checkexpo(char *key, char *value, t_list **env)
 {
-	ev_list	*tmp;
+	t_list	*tmp;
 	char	*j;
 
 	tmp = *env;
@@ -36,9 +36,9 @@ int	checkexpo(char *key, char *value, ev_list **env)
 	return (1);
 }
 
-void	print_env(ev_list **env, int flag)
+void	print_env(t_list **env, int flag)
 {
-	ev_list	*tmp;
+	t_list	*tmp;
 
 	tmp = *env;
 	while (tmp)
@@ -69,9 +69,9 @@ int	checkjoin(char *key)
 	return (0);
 }
 
-int	check_double(ev_list **env, char *key, char *value)
+int	check_double(t_list **env, char *key, char *value)
 {
-	ev_list	*tmp;
+	t_list	*tmp;
 
 	tmp = *env;
 	while (tmp)

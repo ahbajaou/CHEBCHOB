@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 13:45:26 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/27 17:00:58 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 18:01:29 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,11 @@ void	splitexpofree(char **str, int i)
 	}
 }
 
-char	**splitexpo(const char *s, char c)
+char	**splitexpo2(char **str, const char *s, char c, int i)
 {
-	char	**str;
-	size_t	i;
-	int		flag;
+	int	flag;
 
-	i = 0;
-	if (s == NULL)
-		return (NULL);
 	flag = 0;
-	str = (char **)malloc(sizeof(char *) * (count_strings2(s, c) + 1));
-	if (!str)
-		return (NULL);
 	while (*s != '\0')
 	{
 		if (*s == '"')
@@ -54,6 +46,19 @@ char	**splitexpo(const char *s, char c)
 		}
 	}
 	str[i] = NULL;
+	return (str);
+}
+
+char	**splitexpo(const char *s, char c)
+{
+	char	**str;
+
+	if (s == NULL)
+		return (NULL);
+	str = (char **)malloc(sizeof(char *) * (count_strings2(s, c) + 1));
+	if (!str)
+		return (NULL);
+	str = splitexpo2(str, s, c, 0);
 	return (str);
 }
 

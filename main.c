@@ -6,17 +6,17 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 07:15:39 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/27 15:35:37 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:58:34 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern struct global_status	g_exit;
+extern struct t_global_status	g_exit;
 
-ev_list	*_env(char **envp)
+t_list	*_env(char **envp)
 {
-	ev_list	*env;
+	t_list	*env;
 	char	**tmp;
 	int		i;
 
@@ -98,7 +98,7 @@ char	*concatenate_with_newline(char *old_str, char *continuation)
 int	main(int ac, char **av, char **envp)
 {
 	t_cmd	*commands;
-	ev_list	*env;
+	t_list	*env;
 	char	*str;
 	char	*replaced_str;
 	int		i;
@@ -113,10 +113,10 @@ int	main(int ac, char **av, char **envp)
 	commands = NULL;
 	env = _env(envp);
 	signal(SIGINT, sighandler);
-	signal(SIGQUIT, sighandler);
 	while (1)
 	{
 		flag = 0;
+		signal(SIGQUIT, SIG_DFL);
 		str = readline("minishell: ");
 		if (!str)
 			exit(1);

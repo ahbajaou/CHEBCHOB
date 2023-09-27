@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 07:19:15 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/27 17:10:44 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:50:22 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-typedef enum
+typedef enum errortype
 {
 	ERROR_DOC,
 	ERROR_SYNTAX,
@@ -34,7 +34,7 @@ typedef enum
 	REDIR_ERROR,
 	REDIR_ERROR_L1R1,
 	ERROR_CNF,
-}							ErrorType;
+}							t_errortype;
 
 typedef enum e_redirection
 {
@@ -78,13 +78,13 @@ typedef struct e_list
 	char					*key;
 	char					*value;
 	struct e_list			*next;
-}							ev_list;
+}							t_list;
 
-typedef struct global_status
+typedef struct t_global_status
 {
 	int						_exit;
 
-}							global_status;
+}							t_global_status;
 
 /*lexer*/
 
@@ -119,33 +119,33 @@ char						*custom_str(char *str, char *delims);
 char						**ft_split(char *s, char c);
 char						*ft_substr(char const *s, unsigned int start,
 								size_t len);
-void						addback(ev_list **list, ev_list *new);
-ev_list						*key_value(char *key, char *value);
-void						exec_cmd(t_cmd *cmd, ev_list **env, char **envp, int cnt_pipe);
-int							check_builting(t_cmd *cmd, ev_list **env);
+void						addback(t_list**list, t_list*new);
+t_list						*key_value(char *key, char *value);
+void						exec_cmd(t_cmd *cmd, t_list**env, char **envp, int cnt_pipe);
+int							check_builting(t_cmd *cmd, t_list**env);
 char						*ft__strdup(char *str);
-ev_list						*key_value(char *key, char *value);
-void						addback(ev_list **list, ev_list *new);
-char						*execve_cmd(t_cmd *cmd, ev_list *env);
-// void exec_cmd(t_cmd *cmd,ev_list **env,char **envp);
-// char **get_path(ev_list *env);
-int							checkbuilt(t_cmd *cmd, ev_list **env);
-void						parentbuilt(t_cmd *cmd, ev_list **env);
-char						**get_path(ev_list *env, t_cmd *cmd);
+t_list						*key_value(char *key, char *value);
+void						addback(t_list**list, t_list*new);
+char						*execve_cmd(t_cmd *cmd, t_list*env);
+// void exec_cmd(t_cmd *cmd,t_list**env,char **envp);
+// char **get_path(t_list*env);
+int							checkbuilt(t_cmd *cmd, t_list**env);
+void						parentbuilt(t_cmd *cmd, t_list**env);
+char						**get_path(t_list*env, t_cmd *cmd);
 void						free4free(char **tmp);
 void						ft_echo(t_cmd *cmd);
-void						ft_unset(ev_list **env, t_cmd *cmd);
-void						ft_cd(t_cmd *cmd, ev_list **env);
-void						ft_env(ev_list *env, t_cmd *cmd);
+void						ft_unset(t_list**env, t_cmd *cmd);
+void						ft_cd(t_cmd *cmd, t_list**env);
+void						ft_env(t_list*env, t_cmd *cmd);
 int							ft_len(char *str);
-void						ft_pwd(ev_list *env);
+void						ft_pwd(t_list*env);
 void						redir(t_cmd *cmd);
-void						herdoc(t_cmd *cmd, ev_list **env);
+void						herdoc(t_cmd *cmd);
 // void ft_exit(t_cmd *cmd);
 void						ft_exit(t_cmd *cmd);
 // void ft__exit(t_cmd *cmd);
-int							checkerrer(t_cmd *cmd, ev_list *env);
-char						**get_path(ev_list *env, t_cmd *cmd);
+int							checkerrer(t_cmd *cmd, t_list*env);
+char						**get_path(t_list*env, t_cmd *cmd);
 int							ft_strcmp(char *s1, char *s2);
 char						*access_ve(char **path, t_cmd *cmd);
 char						*ft_join2(char *s1, char *s2);
@@ -153,41 +153,44 @@ char						*ft_join3(char *s1, char *s2);
 void						sighandler(int sig);
 char						**parsexport(char *input);
 char						*get_next_line(int fd);
-int							checkbuilt2(t_cmd *cmd, ev_list **env);
+int							checkbuilt2(t_cmd *cmd, t_list**env);
 char						*skipeq(char *str, char sep);
 int							ft_cherchr(char *str, char c);
 int							_exit_status(char *input);
-int	checkdollar(char *str);
-void	exec_cmd2(t_cmd *cmd, ev_list **env);
-void	pipeline(t_cmd *cmd, int fdd, int fd[2]);
-void	_redirection(t_cmd *cmd);
-void	executecmd(t_cmd *cmd, ev_list **env, char **envp);
-void	_waitpid(int cnt_pipe);
-int	errexit(t_cmd *cmd);
-void	delet_unset(ev_list **env, char *key);
-char	*skipeq(char *str, char sep);
-int	check_double(ev_list **env, char *key, char *value);
-int	checkjoin(char *key);
-void	print_env(ev_list **env, int flag);
-int	checkexpo(char *key, char *value, ev_list **env);
-char	**splitexpo(const char *s, char c);
-void	freesplitexpo(char **str);
-int	cnt_len(char *s, char c);
-int	count_strings2(const char *s, char c);
-char	*allocation_string2(const char *s, char c);
-char	**ft_free2(char **str, size_t i);
+int							checkdollar(char *str);
+void						exec_cmd2(t_cmd *cmd, t_list**env);
+void						pipeline(t_cmd *cmd, int fdd, int fd[2]);
+void						_redirection(t_cmd *cmd);
+void						executecmd(t_cmd *cmd, t_list**env, char **envp);
+void						_waitpid(int cnt_pipe);
+int							errexit(t_cmd *cmd);
+void						delet_unset(t_list**env, char *key);
+char						*skipeq(char *str, char sep);
+int							check_double(t_list**env, char *key, char *value);
+int							checkjoin(char *key);
+void						print_env(t_list**env, int flag);
+int							checkexpo(char *key, char *value, t_list**env);
+char						**splitexpo(const char *s, char c);
+void						freesplitexpo(char **str);
+int							cnt_len(char *s, char c);
+int							count_strings2(const char *s, char c);
+char						*allocation_string2(const char *s, char c);
+char						**ft_free2(char **str, size_t i);
+char						*ft_substr(char const *s, unsigned int start, size_t len);
 
 /*expand*/
 char						*replace_env_vars(const char *input);
 int							check_quotes(const char *input);
 char						*read_input_with_quotes(void);
-char	*remove_double_quotes(const char *str);
+char						*remove_double_quotes(const char *str);
 
 /*free*/
 void						free_command(t_cmd *command);
 
 /*error*/
-void						error(ErrorType type, t_cmd *cmd);
+void						error(t_errortype, t_cmd *cmd);
 
 void						execute_command(char *cmd);
+void						error(t_errortype type, t_cmd *cmd);
+
 #endif

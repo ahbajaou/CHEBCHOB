@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   handle_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 07:16:10 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/27 03:53:09 by bel-kase         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:47:51 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern struct global_status	g_exit;
+extern struct t_global_status	g_exit;
 
-void	error(ErrorType type, t_cmd *cmd)
+void	error(t_errortype type, t_cmd *cmd)
 {
 	if (type == ERROR_DOC)
 	{
@@ -36,9 +36,9 @@ void	error(ErrorType type, t_cmd *cmd)
 	}
 	else if (type == REDIR_ERROR)
 	{
-		if (strstr(cmd->name, "/bin/"))
+		if (!strstr(cmd->name, "/bin/"))
 			return ;
-		if (strstr(cmd->name, "../") || strstr(cmd->name, "./"))
+		if (!strstr(cmd->name, "../") || strstr(cmd->name, "./"))
 			return ;
 		g_exit._exit = 2;
 		write(2, "syntax error near unexpected token `newline'\n", 46);

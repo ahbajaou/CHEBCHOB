@@ -6,13 +6,13 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 20:50:38 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/27 16:56:31 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:43:58 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-global_status	g_exit;
+t_global_status	g_exit;
 
 void	_close(int fdd)
 {
@@ -20,7 +20,7 @@ void	_close(int fdd)
 		close(fdd);
 }
 
-void	pipe_fork(t_cmd *cmd, ev_list **env, int fd[2])
+void	pipe_fork(t_cmd *cmd, t_list **env, int fd[2])
 {
 	exec_cmd2(cmd, env);
 	if (pipe(fd) == -1)
@@ -30,7 +30,7 @@ void	pipe_fork(t_cmd *cmd, ev_list **env, int fd[2])
 		perror("fork");
 }
 
-void	parentexec(t_cmd *cmd, ev_list **env)
+void	parentexec(t_cmd *cmd, t_list **env)
 {
 	if (cmd->next == NULL)
 		parentbuilt(cmd, env);
@@ -42,7 +42,7 @@ void	free4cmd(char *cmd)
 		free(cmd);
 }
 
-void	exec_cmd(t_cmd *cmd, ev_list **env, char **envp, int cnt_pipe)
+void	exec_cmd(t_cmd *cmd, t_list **env, char **envp, int cnt_pipe)
 {
 	int	fdd;
 	int	fd[2];

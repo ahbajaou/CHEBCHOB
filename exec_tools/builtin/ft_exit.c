@@ -6,13 +6,13 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 22:43:53 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/26 22:44:39 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:50:50 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-extern struct global_status	g_exit;
+extern struct t_global_status	g_exit;
 
 int	errerexit3(t_cmd *cmd, int i)
 {

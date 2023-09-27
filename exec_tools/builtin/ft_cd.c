@@ -6,15 +6,15 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 21:55:05 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/26 21:55:53 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:35:57 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	update_path(ev_list *env, char *old, char *new)
+void	update_path(t_list *env, char *old, char *new)
 {
-	ev_list	*tmp;
+	t_list	*tmp;
 
 	tmp = env;
 	while (tmp)
@@ -34,7 +34,7 @@ void	update_path(ev_list *env, char *old, char *new)
 	free(tmp);
 }
 
-void	_exec_cd(ev_list **env, char *name)
+void	_exec_cd(t_list **env, char *name)
 {
 	char	cwd[256];
 
@@ -45,9 +45,9 @@ void	_exec_cd(ev_list **env, char *name)
 		update_path(*env, NULL, cwd);
 }
 
-char	*_getenv(ev_list **env)
+char	*_getenv(t_list **env)
 {
-	ev_list	*tmp;
+	t_list	*tmp;
 
 	tmp = *env;
 	while (tmp)
@@ -60,7 +60,7 @@ char	*_getenv(ev_list **env)
 	return (NULL);
 }
 
-void	ft_cd(t_cmd *cmd, ev_list **env)
+void	ft_cd(t_cmd *cmd, t_list **env)
 {
 	char	*path;
 

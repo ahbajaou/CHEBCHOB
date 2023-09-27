@@ -6,13 +6,13 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 20:59:27 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/27 12:14:59 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:37:26 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exec_cmd2(t_cmd *cmd, ev_list **env)
+void	exec_cmd2(t_cmd *cmd, t_list **env)
 {
 	cmd->vex = execve_cmd(cmd, *env);
 	if (!cmd->vex)
@@ -23,10 +23,10 @@ void	exec_cmd2(t_cmd *cmd, ev_list **env)
 	if (checkerrer(cmd, *env) == 0)
 	{
 		if (cmd->vex)
-			{
-				free(cmd->vex);
-				cmd->vex = NULL;
-			}
+		{
+			free(cmd->vex);
+			cmd->vex = NULL;
+		}
 		if (checkbuilt(cmd, env) == 1)
 			return ;
 		return ;
@@ -45,7 +45,6 @@ void	pipeline(t_cmd *cmd, int fdd, int fd[2])
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
 	}
-	// close(fd[0]);
 }
 
 void	_redirection(t_cmd *cmd)
@@ -53,12 +52,12 @@ void	_redirection(t_cmd *cmd)
 	while (cmd->redirections)
 	{
 		redir(cmd);
-		herdoc(cmd, NULL);
+		herdoc(cmd);
 		cmd->redirections = cmd->redirections->next;
 	}
 }
 
-void	executecmd(t_cmd *cmd, ev_list **env, char **envp)
+void	executecmd(t_cmd *cmd, t_list **env, char **envp)
 {
 	if (check_builting(cmd, env) != 1)
 	{

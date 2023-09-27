@@ -6,15 +6,15 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 13:44:57 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/27 13:44:58 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:34:54 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	ft_pwd(ev_list *env)
+void	ft_pwd(t_list *env)
 {
-	ev_list	*tmp;
+	t_list	*tmp;
 
 	tmp = env;
 	while (tmp)

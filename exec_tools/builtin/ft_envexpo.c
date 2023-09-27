@@ -6,13 +6,13 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 13:39:00 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/27 17:06:09 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:43:41 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-extern struct global_status	g_exit;
+extern struct t_global_status	g_exit;
 
 char	*parsq(char *value)
 {
@@ -29,7 +29,7 @@ char	*parsq(char *value)
 	return (value);
 }
 
-void	expo_pars(char *str, char *str1, ev_list **env)
+void	expo_pars(char *str, char *str1, t_list **env)
 {
 	char	*value;
 	int		sz;
@@ -69,7 +69,7 @@ char	*joinexpo(char *str)
 	return (NULL);
 }
 
-void	add_expo(char **str, ev_list **env)
+void	add_expo(char **str, t_list **env)
 {
 	int		i;
 	char	**tmp;
@@ -97,7 +97,7 @@ void	add_expo(char **str, ev_list **env)
 	free(tmp);
 }
 
-void	ft_env(ev_list *env, t_cmd *cmd)
+void	ft_env(t_list *env, t_cmd *cmd)
 {
 	int	flag;
 

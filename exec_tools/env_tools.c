@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 22:34:53 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/26 20:18:20 by bel-kase         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:37:41 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,20 @@ char	*ft__strdup(char *str)
 	return (dup);
 }
 
-ev_list	*key_value(char *key, char *value)
+t_list	*key_value(char *key, char *value)
 {
-	ev_list	*env;
+	t_list	*env;
 
-	env = malloc(sizeof(ev_list));
+	env = malloc(sizeof(t_list));
 	env->key = ft__strdup(key);
 	env->value = ft__strdup(value);
 	env->next = NULL;
 	return (env);
 }
 
-void	addback(ev_list **list, ev_list *new)
+void	addback(t_list **list, t_list *new)
 {
-	ev_list *tmp;
+	t_list	*tmp;
 
 	tmp = *list;
 	if (!(*list))

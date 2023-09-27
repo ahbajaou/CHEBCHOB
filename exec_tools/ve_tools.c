@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ve_tools.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 02:52:05 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/26 20:22:43 by bel-kase         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:36:57 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	**get_path(ev_list *env, t_cmd *cmd)
+char	**get_path(t_list *env, t_cmd *cmd)
 {
-	ev_list	*tmp;
+	t_list	*tmp;
 	char	*path;
 	char	**spl;
 
@@ -42,8 +42,10 @@ char	**get_path(ev_list *env, t_cmd *cmd)
 
 char	*access_ve(char **path, t_cmd *cmd)
 {
-	int i = 0;
-	char *current;
+	int		i;
+	char	*current;
+
+	i = 0;
 	if (!path)
 		return (NULL);
 	while (path[i])

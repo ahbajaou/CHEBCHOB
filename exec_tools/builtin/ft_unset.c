@@ -6,13 +6,13 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 22:47:47 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/27 11:16:07 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:34:20 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	delet_unset2(ev_list *tmp, ev_list **env)
+void	delet_unset2(t_list *tmp, t_list **env)
 {
 	tmp = (*env);
 	(*env) = (*env)->next;
@@ -21,12 +21,11 @@ void	delet_unset2(ev_list *tmp, ev_list **env)
 	return ;
 }
 
-void	delet_unset(ev_list **env, char *key)
+void	delet_unset(t_list **env, char *key)
 {
-	ev_list	*tmp;
-	ev_list	*perv;
+	t_list	*tmp;
+	t_list	*perv;
 
-	perv = NULL;
 	tmp = *env;
 	if (env != NULL)
 	{
@@ -51,7 +50,7 @@ void	delet_unset(ev_list **env, char *key)
 	}
 }
 
-void	ft_unset(ev_list **env, t_cmd *cmd)
+void	ft_unset(t_list **env, t_cmd *cmd)
 {
 	int	i;
 

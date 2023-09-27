@@ -6,11 +6,12 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 07:16:27 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/27 15:27:46 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:52:37 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+extern struct t_global_status	g_exit;
 
 size_t	calculate_required_length(const char *input)
 {
@@ -138,8 +139,6 @@ char	*read_input_with_quotes(void)
 	free(line);
 	return (full_input);
 }
-
-extern struct global_status	g_exit;
 
 int	_exit_status(char *input)
 {

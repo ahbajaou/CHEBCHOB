@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_line.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/27 20:14:52 by ahbajaou          #+#    #+#             */
+/*   Updated: 2023/09/27 20:15:33 by ahbajaou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static int	ft_strchr2(const char *s, int c)
@@ -51,10 +63,10 @@ static char	*didnt_find_n(char **btr)
 
 char	*get_next_line(int fd)
 {
-	char buffer[1 + 1];
-	static char *btr;
-	char *line;
-	int i;
+	char		buffer[1 + 1];
+	static char	*btr;
+	char		*line;
+	int			i;
 
 	if (fd < 0)
 		return (NULL);

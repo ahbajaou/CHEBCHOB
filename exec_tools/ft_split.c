@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 22:32:58 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/26 20:20:22 by bel-kase         ###   ########.fr       */
+/*   Updated: 2023/09/27 18:04:26 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ char	*ft__substr(char const *s, unsigned int start, size_t len)
 	char			*new;
 
 	i = 0;
-	// printf("<<<<<%s>>>>>\n",s);
-	// printf("start = %d len = %ld",start,len);
 	if (start > ft_strlen((char *)s))
 		return (strdup(""));
 	while (i < len && s[i])
@@ -46,31 +44,6 @@ char	*ft__substr(char const *s, unsigned int start, size_t len)
 	}
 	new[i] = '\0';
 	return (new);
-}
-
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	size_t	i;
-	char	*str;
-
-	i = 0;
-	if (!s)
-		return (NULL);
-	if (start > ft_strlen(s))
-		return (strdup(""));
-	if (len > ft_strlen(s + start))
-		return (strdup(s + start));
-	str = malloc(sizeof(char) * (len + 1));
-	if (!str)
-		return (NULL);
-	while (s[start] != '\0' && i < len)
-	{
-		str[i] = s[start];
-		start++;
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
 }
 
 int	count_c(const char *str, char c, int i)
@@ -97,8 +70,8 @@ int	count_word(const char *str, char c)
 	wd = 0;
 	while (str[i])
 	{
-		if ((str[i] != c && str[i + 1] == c) || (str[i] != c && str[i
-				+ 1] == '\0'))
+		if ((str[i] != c && str[i + 1] == c)
+			|| (str[i] != c && str[i + 1] == '\0'))
 			wd++;
 		i++;
 	}
@@ -107,15 +80,14 @@ int	count_word(const char *str, char c)
 
 char	**ft_split(char *s, char c)
 {
-	int i;
-	int sp;
-	int xc;
-	char **spl;
-	int x;
+	int		i;
+	int		sp;
+	int		xc;
+	char	**spl;
+	int		x;
 
 	sp = 0;
 	i = 0;
-
 	xc = count_word(s, c);
 	spl = malloc(sizeof(char *) * (xc + 1));
 	if (!spl)
@@ -127,19 +99,8 @@ char	**ft_split(char *s, char c)
 		x = count_c(s, c, sp);
 		spl[i] = ft__substr(s, sp, x);
 		sp += x + 1;
-		if (!spl[i])
-		{
-			while (i > 0)
-			{
-				i--;
-				free(spl[i]);
-			}
-			free(spl);
-			return (NULL);
-		}
 		i++;
 	}
 	spl[i] = NULL;
-	// free(s);
 	return (spl);
 }

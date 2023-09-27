@@ -6,13 +6,13 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 20:59:38 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/26 22:43:49 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:43:36 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-extern struct global_status	g_exit;
+extern struct t_global_status	g_exit;
 
 void	errcd(t_cmd *cmd)
 {
@@ -41,9 +41,9 @@ void	getpath2(t_cmd *cmd, int p, int i, char **spl)
 	}
 }
 
-void	getpath(t_cmd *cmd, ev_list *env, int i)
+void	getpath(t_cmd *cmd, t_list *env, int i)
 {
-	ev_list	*tmp;
+	t_list	*tmp;
 	int		p;
 	char	**spl;
 
@@ -63,7 +63,7 @@ void	getpath(t_cmd *cmd, ev_list *env, int i)
 	free(tmp);
 }
 
-void	erredoc(t_cmd *cmd, ev_list *env)
+void	erredoc(t_cmd *cmd, t_list *env)
 {
 	int	i;
 
@@ -75,7 +75,7 @@ void	erredoc(t_cmd *cmd, ev_list *env)
 	getpath(cmd, env, i);
 }
 
-int	checkerrer(t_cmd *cmd, ev_list *env)
+int	checkerrer(t_cmd *cmd, t_list *env)
 {
 	if (cmd->name)
 	{

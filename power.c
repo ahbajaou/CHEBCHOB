@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   power.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 07:15:47 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/27 03:59:19 by bel-kase         ###   ########.fr       */
+/*   Updated: 2023/09/27 19:09:41 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,40 +84,40 @@ void	add_redirection(t_cmd *command, char *filename,
 	}
 }
 
-// void	print_commands(t_cmd *head)
-// {
-// 	t_cmd				*current;
-// 	int					i;
-// 	t_redirection_list	*temp;
+void	print_commands(t_cmd *head)
+{
+	t_cmd				*current;
+	int					i;
+	t_redirection_list	*temp;
 
-// 	current = head;
-// 	while (current != NULL)
-// 	{
-// 		i = 0;
-// 		printf("Command: %s\n", current->name);
-// 		while (i < current->arg_count)
-// 		{
-// 			printf("Argument: %s\n", current->args[i]);
-// 			i++;
-// 		}
-// 		if (current->redirections)
-// 		{
-// 			temp = current->redirections;
-// 			while (temp)
-// 			{
-// 				printf("Redirection: ");
-// 				if (temp->redirection_type == REDIR_INPUT)
-// 					printf("< ");
-// 				else if (temp->redirection_type == REDIR_OUTPUT)
-// 					printf("> ");
-// 				else if (temp->redirection_type == REDIR_APPEND)
-// 					printf(">> ");
-// 				else if (temp->redirection_type == REDIR_HEREDOC)
-// 					printf("<< ");
-// 				printf("%s\n", temp->filename);
-// 				temp = temp->next;
-// 			}
-// 		}
-// 		current = current->next;
-// 	}
-// }
+	current = head;
+	while (current != NULL)
+	{
+		i = 0;
+		printf("Command: %s\n", current->name);
+		while (i < current->arg_count)
+		{
+			printf("Argument: %s\n", current->args[i]);
+			i++;
+		}
+		if (current->redirections)
+		{
+			temp = current->redirections;
+			while (temp)
+			{
+				printf("Redirection: ");
+				if (temp->redirection_type == REDIR_INPUT)
+					printf("< ");
+				else if (temp->redirection_type == REDIR_OUTPUT)
+					printf("> ");
+				else if (temp->redirection_type == REDIR_APPEND)
+					printf(">> ");
+				else if (temp->redirection_type == REDIR_HEREDOC)
+					printf("<< ");
+				printf("%s\n", temp->filename);
+				temp = temp->next;
+			}
+		}
+		current = current->next;
+	}
+}
