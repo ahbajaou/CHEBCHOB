@@ -5,53 +5,77 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/25 07:16:05 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/25 07:16:07 by bel-kase         ###   ########.fr       */
+/*   Created: 2023/09/27 03:52:41 by bel-kase          #+#    #+#             */
+/*   Updated: 2023/09/27 04:15:24 by bel-kase         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**lexer(char *input)
+char	*custom(char *str, char *delims, char **saveptr)
 {
-	int		size;
-	char	**tokens;
-	char	*token;
-	int		i;
+	char	*token_start;
 
-	size = 64;
-	tokens = malloc(size * sizeof(char *));
-	if (!tokens)
-		exit(1);
-	token = custom_str(input, " ");
-	i = 0;
-	while (token != NULL)
+	if (!str)
+		str = *saveptr;
+	while (*str && strchr(delims, *str))
+		str++;
+	if (*str == '\0')
 	{
-		if (i >= size)
-		{
-			size *= 2;
-			tokens = realloc(tokens, size * sizeof(char *));
-			if (!tokens)
-				exit(1);
-		}
-		tokens[i] = malloc((strlen(token) + 1) * sizeof(char));
-		if (!tokens[i])
-			exit(1);
-		strcpy(tokens[i], token);
-		i++;
-		token = custom_str(NULL, " ");
+		*saveptr = str;
+		return (NULL);
 	}
-	tokens[i] = NULL;
-	return (tokens);
+	token_start = str;
+	while (*str && !strchr(delims, *str))
+		str++;
+	if (*str == '\0')
+		*saveptr = str;
+	else
+	{
+		*str = '\0';
+		*saveptr = str + 1;
+	}
+	return (token_start);
 }
 
-void	free_tokens(char **tokens)
+char	*custom_str(char *str, char *delims)
 {
-	int i = 0;
-	while (tokens[i] != NULL)
+	static char	*next_token;
+	char		*token_start;
+
+	next_token = NULL;
+	if (!str)
+		str = next_token;
+	while (*str && strchr(delims, *str))
+		str++;
+	if (*str == '\0')
 	{
-		free(tokens[i]);
-		i++;
+		next_token = str;
+		return (NULL);
 	}
-	free(tokens);
+	token_start = str;
+	while (*str && !strchr(delims, *str))
+		str++;
+	if (*str)
+	{
+		*str = '\0';
+		next_token = str + 1;
+	}
+	else
+		next_token = str;
+	return (token_start);
+}
+
+char	*remove_double_quotes(const char *str)
+{
+	size_t	len;
+	char	*new_str;
+
+	len = my_strlen(str);
+	if (str[0] == '"' && str[len - 1] == '"')
+	{
+		new_str = strndup(str + 1, len - 2);
+		return (new_str);
+	}
+	return (strdup(str));
 }

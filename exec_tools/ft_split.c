@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 22:32:58 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/07/15 22:40:29 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/26 20:20:22 by bel-kase         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*ft__substr(char const *s, unsigned int start, size_t len)
 		return (strdup(""));
 	while (i < len && s[i])
 		i++;
-	new = malloc (i + 1);
+	new = malloc(i + 1);
 	if (!new)
 		return (NULL);
 	i = 0;
@@ -60,7 +60,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (strdup(""));
 	if (len > ft_strlen(s + start))
 		return (strdup(s + start));
-	str = malloc (sizeof(char) * (len + 1));
+	str = malloc(sizeof(char) * (len + 1));
 	if (!str)
 		return (NULL);
 	while (s[start] != '\0' && i < len)
@@ -97,25 +97,25 @@ int	count_word(const char *str, char c)
 	wd = 0;
 	while (str[i])
 	{
-		if ((str[i] != c && str[i + 1] == c)
-			|| (str[i] != c && str[i + 1] == '\0'))
+		if ((str[i] != c && str[i + 1] == c) || (str[i] != c && str[i
+				+ 1] == '\0'))
 			wd++;
 		i++;
 	}
 	return (wd);
 }
 
-char	**ft_split( char *s, char c)
+char	**ft_split(char *s, char c)
 {
-	int		i;
-	int		sp;
-	int		xc;
-	char	**spl;
-	int		x;
+	int i;
+	int sp;
+	int xc;
+	char **spl;
+	int x;
 
 	sp = 0;
 	i = 0;
-	
+
 	xc = count_word(s, c);
 	spl = malloc(sizeof(char *) * (xc + 1));
 	if (!spl)
@@ -127,9 +127,9 @@ char	**ft_split( char *s, char c)
 		x = count_c(s, c, sp);
 		spl[i] = ft__substr(s, sp, x);
 		sp += x + 1;
-		if (!spl[i]) 
+		if (!spl[i])
 		{
-			while (i > 0) 
+			while (i > 0)
 			{
 				i--;
 				free(spl[i]);

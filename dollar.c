@@ -6,7 +6,7 @@
 /*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 07:16:27 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/25 11:39:00 by bel-kase         ###   ########.fr       */
+/*   Updated: 2023/09/27 04:19:39 by bel-kase         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ size_t	calculate_required_length(const char *input)
 		{
 			input++;
 			start = input;
-			while (*input && (isalnum(*input) || *input == '_'))
+			while (*input && (my_isalnum(*input) || *input == '_'))
 				input++;
 			var_name_length = input - start;
 			var_name = malloc(var_name_length + 1);
@@ -40,7 +40,7 @@ size_t	calculate_required_length(const char *input)
 			var_name[var_name_length] = '\0';
 			var_value = getenv(var_name);
 			if (var_value)
-				total_length += strlen(var_value);
+				total_length += my_strlen(var_value);
 			free(var_name);
 		}
 		else
@@ -96,6 +96,7 @@ char	*read_input_with_quotes(void)
 	size_t	full_len;
 	char	quote_char;
 	int		is_escaped;
+	size_t	i;
 
 	line = NULL;
 	len = 0;
@@ -107,11 +108,11 @@ char	*read_input_with_quotes(void)
 	while ((read = getline(&line, &len, stdin)) != -1)
 	{
 		full_input = realloc(full_input, full_len + read + 1);
-		strcat(full_input, line);
+		my_strcat(full_input, line);
 		full_len += read;
 		if (full_input[full_len - 1] == '\n')
 			full_input[full_len - 1] = '\0';
-		for (size_t i = 0; full_input[i] != '\0'; i++)
+		for (i = 0; full_input[i] != '\0'; i++)
 		{
 			if (full_input[i] == '\\' && !is_escaped && (quote_char == '\"'
 					|| quote_char == '\0'))
@@ -137,41 +138,51 @@ char	*read_input_with_quotes(void)
 	free(line);
 	return (full_input);
 }
+
 extern struct global_status	g_exit;
 
 int	_exit_status(char *input)
 {
-	int i = 0;
-	if (strstr(input,"echo"))
+	int	i;
+
+	i = 0;
+	if (strstr(input, "echo"))
 	{
 		while (input[i])
 		{
-			if (ft_cherchr(input,'$') == 1 && ft_cherchr(input,'?') == 1)
-				{
-					printf("%d\n",g_exit._exit);
-					g_exit._exit = 0;
-					return (1);
-				}
+			if (ft_cherchr(input, '$') == 1 && ft_cherchr(input, '?') == 1)
+			{
+				printf("%d\n", g_exit._exit);
+				g_exit._exit = 0;
+				return (1);
+			}
 			i++;
 		}
 	}
 	return (0);
 }
+
 char	*replace_env_vars(const char *input)
 {
-	// _exit_status((char *)input);
-	size_t required_length = calculate_required_length(input);
-	char *result = malloc(required_length + 1);
+	size_t	required_length;
+	char	*result;
+	char	*current;
+	char	quote_char;
+	int		is_escaped;
+	char	var_name[256];
+	char	*var_start;
+	char	*var_value;
+
+	required_length = calculate_required_length(input);
+	result = malloc(required_length + 1);
 	if (!result)
 	{
 		perror("malloc");
 		exit(1);
 	}
-
-	char *current = result;
-	char quote_char = '\0';
-	int is_escaped = 0;
-
+	current = result;
+	quote_char = '\0';
+	is_escaped = 0;
 	while (*input)
 	{
 		if (*input == '\\' && quote_char == '"' &&
@@ -181,7 +192,6 @@ char	*replace_env_vars(const char *input)
 			input += 2;
 			continue ;
 		}
-		// Quote handling
 		if (*input == '"' && quote_char != '\'')
 		{
 			if (!is_escaped && quote_char == '"')
@@ -200,16 +210,14 @@ char	*replace_env_vars(const char *input)
 			input++;
 			continue ;
 		}
-		// Environment variable
 		if (*input == '$' && quote_char != '\'')
 		{
 			input++;
-			char var_name[256];
-			char *var_start = var_name;
-			while (*input && (isalnum(*input) || *input == '_'))
+			var_start = var_name;
+			while (*input && (my_isalnum(*input) || *input == '_'))
 				*var_start++ = *input++;
 			*var_start = '\0';
-			char *var_value = getenv(var_name);
+			var_value = getenv(var_name);
 			if (var_value)
 			{
 				strncpy(current, var_value, required_length - (current
@@ -224,4 +232,24 @@ char	*replace_env_vars(const char *input)
 	}
 	*current = '\0';
 	return (result);
+}
+
+int	checkdollar(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (strstr(str, "echo"))
+	{
+		while (str[i])
+		{
+			if (ft_cherchr(str, '"') == 1 && ft_cherchr(str, '|') == 1)
+			{
+				ft_strchr(str, '"');
+				return (1);
+			}
+			i++;
+		}
+	}
+	return (0);
 }

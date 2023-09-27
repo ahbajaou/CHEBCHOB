@@ -6,7 +6,7 @@
 /*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 07:19:15 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/25 08:54:11 by bel-kase         ###   ########.fr       */
+/*   Updated: 2023/09/27 04:20:18 by bel-kase         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <stddef.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -25,7 +26,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-typedef enum
+typedef enum s_error
 {
 	ERROR_DOC,
 	ERROR_SYNTAX,
@@ -49,11 +50,11 @@ typedef struct s_cmd
 {
 	int						outf;
 	int						inf;
-	int j;
-	int cnt_pipe;
+	int						j;
+	int						cnt_pipe;
 	char					*vex;
 	char					**Expo;
-	char 					*execve[3];
+	char					*execve[3];
 	int						pid;
 	int						herd;
 	int						arg_count;
@@ -87,7 +88,8 @@ typedef struct global_status
 }							global_status;
 
 /*lexer*/
-
+void						free_all_cmds(t_cmd *head);
+char						*remove_double_quotes(const char *str);
 /*parse*/
 t_cmd						*parse_input(char *input);
 void						print_commands(t_cmd *head);
@@ -103,6 +105,17 @@ void						add_redirection(t_cmd *command, char *filename,
 /*func_sup*/
 char						*custom(char *str, char *delims, char **saveptr);
 char						*custom_str(char *str, char *delims);
+/*libft-pars*/
+char						*my_strcat(char *dest, const char *src);
+char						*my_strdup(const char *s);
+size_t						my_strspn(const char *s, const char *accept);
+int							my_strcmp(const char *s1, const char *s2);
+void						*my_calloc(size_t nmemb, size_t size);
+void						*my_realloc(void *ptr, size_t old_size,
+								size_t new_size);
+size_t						my_strlen(const char *str);
+int							my_isalnum(int c);
+void						ft_strchr(char *str, char c);
 
 /*exec*/
 char						**ft_split(char *s, char c);
@@ -116,10 +129,11 @@ char						*ft__strdup(char *str);
 ev_list						*key_value(char *key, char *value);
 void						addback(ev_list **list, ev_list *new);
 char						*execve_cmd(t_cmd *cmd, ev_list *env);
-// void exec_cmd(t_cmd *cmd,ev_list **env,char **envp);
-// char **get_path(ev_list *env);
+/*dollar*/
+int							checkdollar(char *str);
+
 int							checkbuilt(t_cmd *cmd, ev_list **env);
-void parentbuilt(t_cmd *cmd, ev_list **env);
+void						parentbuilt(t_cmd *cmd, ev_list **env);
 char						**get_path(ev_list *env, t_cmd *cmd);
 void						free4free(char **tmp);
 void						ft_echo(t_cmd *cmd);
@@ -128,8 +142,8 @@ void						ft_cd(t_cmd *cmd, ev_list **env);
 void						ft_env(ev_list *env, t_cmd *cmd);
 int							ft_len(char *str);
 void						ft_pwd(ev_list *env);
-void redir(t_cmd *cmd);
-void    herdoc(t_cmd *cmd,ev_list **env);
+void						redir(t_cmd *cmd);
+void						herdoc(t_cmd *cmd, ev_list **env);
 // void ft_exit(t_cmd *cmd);
 void						ft_exit(t_cmd *cmd);
 // void ft__exit(t_cmd *cmd);
@@ -138,16 +152,16 @@ char						**get_path(ev_list *env, t_cmd *cmd);
 int							ft_strcmp(char *s1, char *s2);
 char						*access_ve(char **path, t_cmd *cmd);
 char						*ft_join2(char *s1, char *s2);
-char	*ft_join3(char *s1, char *s2);
+char						*ft_join3(char *s1, char *s2);
 void						sighandler(int sig);
-char **ParsExport(char *input);
+char						**ParsExport(char *input);
 char						*get_next_line(int fd);
 void						freeSplitExpo(char **str);
 int							checkbuilt2(t_cmd *cmd, ev_list **env);
-char *skipeq(char *str,char sep);
-char **SplitExpo(const char *s, char c);
-int ft_cherchr(char *str,char c);
-int	_exit_status(char *input);
+char						*skipeq(char *str, char sep);
+char						**SplitExpo(const char *s, char c);
+int							ft_cherchr(char *str, char c);
+int							_exit_status(char *input);
 
 /*expand*/
 char						*replace_env_vars(const char *input);
@@ -158,8 +172,7 @@ char						*read_input_with_quotes(void);
 void						free_command(t_cmd *command);
 
 /*error*/
-void error(ErrorType type,t_cmd *cmd);
+void						error(ErrorType type, t_cmd *cmd);
 
-
-void execute_command(char *cmd);
+void						execute_command(char *cmd);
 #endif

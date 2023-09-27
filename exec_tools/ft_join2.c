@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   ft_join2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 03:17:21 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/17 00:03:23 by user             ###   ########.fr       */
+/*   Updated: 2023/09/26 20:19:25 by bel-kase         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../minishell.h"
 
@@ -24,6 +23,7 @@ int	ft_slen(char *str)
 		i++;
 	return (i);
 }
+
 char	*ft_join2(char *s1, char *s2)
 {
 	unsigned int	i;
@@ -44,7 +44,7 @@ char	*ft_join2(char *s1, char *s2)
 		}
 		free(s1);
 	}
-	if (s2) 
+	if (s2)
 	{
 		while (s2[j])
 			str[i++] = s2[j++];
@@ -52,6 +52,7 @@ char	*ft_join2(char *s1, char *s2)
 	str[i] = '\0';
 	return (str);
 }
+
 char	*ft_join3(char *s1, char *s2)
 {
 	unsigned int	i;
@@ -72,7 +73,7 @@ char	*ft_join3(char *s1, char *s2)
 		}
 		free(s1);
 	}
-	if (s2) 
+	if (s2)
 	{
 		while (s2[j])
 			str[i++] = s2[j++];

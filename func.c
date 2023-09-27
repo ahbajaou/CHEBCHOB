@@ -5,63 +5,93 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/25 07:16:15 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/25 08:56:38 by bel-kase         ###   ########.fr       */
+/*   Created: 2023/09/27 03:54:23 by bel-kase          #+#    #+#             */
+/*   Updated: 2023/09/27 03:54:31 by bel-kase         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*custom(char *str, char *delims, char **saveptr)
+size_t	my_strlen(const char *str)
 {
-	char	*token_start;
+	size_t	i;
 
-	if (!str)
-		str = *saveptr;
-	while (*str && strchr(delims, *str))
-		str++;
-	if (*str == '\0')
-	{
-		*saveptr = str;
-		return (NULL);
-	}
-	token_start = str;
-	while (*str && !strchr(delims, *str))
-		str++;
-	if (*str == '\0')
-		*saveptr = str;
-	else
-	{
-		*str = '\0';
-		*saveptr = str + 1;
-	}
-	return (token_start);
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
 }
 
-char	*custom_str(char *str, char *delims)
+char	*my_strdup(const char *src)
 {
-	static char	*next_token;
-	char		*token_start;
+	char	*str;
+	int		i;
 
-	next_token = NULL;
+	i = 0;
+	str = malloc(sizeof(char) * (my_strlen(src) + 1));
 	if (!str)
-		str = next_token;
-	while (*str && strchr(delims, *str))
-		str++;
-	if (*str == '\0')
-	{
-		next_token = str;
 		return (NULL);
-	}
-	token_start = str;
-	while (*str && !strchr(delims, *str))
-		str++;
-	if (*str)
+	while (src[i])
 	{
-		*str = '\0';
-		next_token = str + 1;
+		str[i] = src[i];
+		i++;
 	}
-	else
-		next_token = str;
-	return (token_start);
+	str[i] = '\0';
+	return (str);
+}
+
+size_t	my_strspn(const char *s, const char *accept)
+{
+	size_t	i;
+	size_t	j;
+	int		found;
+
+	i = 0;
+	while (s[i])
+	{
+		j = 0;
+		found = 0;
+		while (accept[j])
+		{
+			if (s[i] == accept[j])
+			{
+				found = 1;
+				break ;
+			}
+			j++;
+		}
+		if (!found)
+			break ;
+		i++;
+	}
+	return (i);
+}
+
+int	my_strcmp(const char *s1, const char *s2)
+{
+	size_t	i;
+
+	i = 0;
+	while (s1[i] && s1[i] == s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+char	*my_strcat(char *dest, const char *src)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	while (dest[i])
+		i++;
+	while (src[j])
+	{
+		dest[i] = src[j];
+		i++;
+		j++;
+	}
+	dest[i] = '\0';
+	return (dest);
 }

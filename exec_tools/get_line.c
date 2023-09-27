@@ -1,4 +1,3 @@
-
 #include "../minishell.h"
 
 static int	ft_strchr2(const char *s, int c)
@@ -43,7 +42,7 @@ static char	*didnt_find_n(char **btr)
 		return (temp);
 	}
 	else
-	{	
+	{
 		free(*btr);
 		*btr = NULL;
 		return (NULL);
@@ -52,10 +51,10 @@ static char	*didnt_find_n(char **btr)
 
 char	*get_next_line(int fd)
 {
-	char				buffer[1 + 1];
-	static char			*btr;
-	char				*line;
-	int					i;
+	char buffer[1 + 1];
+	static char *btr;
+	char *line;
+	int i;
 
 	if (fd < 0)
 		return (NULL);
