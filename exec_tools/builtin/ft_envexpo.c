@@ -1,146 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_envexpo.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/27 13:39:00 by ahbajaou          #+#    #+#             */
+/*   Updated: 2023/09/27 17:06:09 by ahbajaou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 extern struct global_status	g_exit;
-
-void	print_env(ev_list **env, int flag)
-{
-	ev_list	*tmp;
-
-	tmp = *env;
-	(void)flag;
-	while (tmp)
-	{
-		if (flag == 1 && tmp->key != NULL && tmp->value == NULL)
-		{
-			printf("declare -x %s\n", tmp->key);
-			// return ;
-		}
-		if (flag == 0 && tmp->key != NULL && tmp->value != NULL)
-		{
-			printf("%s=\"%s\"\n", tmp->key, tmp->value);
-			// return ;
-		}
-		if (flag == 1 && tmp->key != NULL && tmp->value != NULL)
-		{
-			printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
-			// return ;
-		}
-		tmp = tmp->next;
-	}
-	free(tmp);
-	return ;
-}
-
-void	delet_expo(ev_list **env, char *key, char *value)
-{
-	ev_list	*tmp;
-	ev_list	*perv;
-
-	tmp = *env;
-	(void)value;
-	perv = NULL;
-	if (env != NULL)
-	{
-		if (tmp->key != key)
-		{
-			while (tmp->next != NULL)
-			{
-				if (ft_strcmp(tmp->next->key, key) == 0)
-				{
-					perv = tmp->next;
-					tmp->next = tmp->next->next;
-					free(perv);
-					return ;
-				}
-				tmp = tmp->next;
-			}
-		}
-	}
-	free(tmp);
-	return ;
-}
-
-int	checkjoin(char *key)
-{
-	int	i;
-
-	i = 0;
-	while (key[i])
-	{
-		if (key[i] == '+')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	check_double(ev_list **env, char *key, char *value)
-{
-	ev_list	*tmp;
-
-	tmp = *env;
-	while (tmp)
-	{
-		if (ft_strcmp(tmp->key, key) == 0 && ft_strcmp(tmp->value, value)
-			&& ft_strcmp(tmp->value, "NULL") != 0)
-		{
-			if (!value)
-				return (0);
-			delet_expo(env, key, value);
-			addback(env, key_value(key, value));
-			return (0);
-		}
-		if (ft_strcmp(tmp->key, key) == 0 && ft_strcmp(tmp->value, value) == 0)
-			return (0);
-		if (ft_strcmp(tmp->key, key) == 0 && value == NULL)
-			return (0);
-		tmp = tmp->next;
-	}
-	free(tmp);
-	return (1);
-}
-
-char	*skipeq(char *str, char sep)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == sep)
-		{
-			i++;
-			return (str + i);
-		}
-		i++;
-	}
-	return (str);
-}
-
-int	checkexpo(char *key, char *value, ev_list **env)
-{
-	ev_list	*tmp;
-	char	*j;
-
-	tmp = *env;
-	while (tmp)
-	{
-		if (ft_strcmp(tmp->key, key) == 0 && ft_strcmp(tmp->value, value) != 0)
-		{
-			if (*value == 0)
-				return (0);
-			j = ft_join2(tmp->value, value);
-			delet_expo(env, key, value);
-			addback(env, key_value(key, j));
-			free(j);
-			return (0);
-		}
-		tmp = tmp->next;
-	}
-	// free(j);
-	free(tmp);
-	return (1);
-}
 
 char	*parsq(char *value)
 {
@@ -227,21 +99,21 @@ void	add_expo(char **str, ev_list **env)
 
 void	ft_env(ev_list *env, t_cmd *cmd)
 {
-	int flag;
+	int	flag;
 
 	flag = -1;
-	if (ft_strcmp(cmd->name, "export") == 0 && !cmd->Expo[0])
+	if (ft_strcmp(cmd->name, "export") == 0 && !cmd->expo[0])
 		flag = 1;
 	if (ft_strcmp(cmd->name, "env") == 0)
 		flag = 0;
 	if (flag == -1)
 	{
-		add_expo(cmd->Expo, &env);
+		add_expo(cmd->expo, &env);
 		return ;
 	}
 	if (flag == 0 || flag == 1)
 	{
 		print_env(&env, flag);
 		return ;
-    }
+	}
 }

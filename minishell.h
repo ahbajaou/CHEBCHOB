@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 07:19:15 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/27 04:20:18 by bel-kase         ###   ########.fr       */
+/*   Updated: 2023/09/27 17:10:44 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <stddef.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -26,7 +25,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-typedef enum s_error
+typedef enum
 {
 	ERROR_DOC,
 	ERROR_SYNTAX,
@@ -53,7 +52,7 @@ typedef struct s_cmd
 	int						j;
 	int						cnt_pipe;
 	char					*vex;
-	char					**Expo;
+	char					**expo;
 	char					*execve[3];
 	int						pid;
 	int						herd;
@@ -88,8 +87,7 @@ typedef struct global_status
 }							global_status;
 
 /*lexer*/
-void						free_all_cmds(t_cmd *head);
-char						*remove_double_quotes(const char *str);
+
 /*parse*/
 t_cmd						*parse_input(char *input);
 void						print_commands(t_cmd *head);
@@ -101,11 +99,7 @@ t_cmd						*create_command(char *name);
 void						add_argument(t_cmd *command, char *arg);
 void						add_redirection(t_cmd *command, char *filename,
 								t_redirection redirection);
-
-/*func_sup*/
-char						*custom(char *str, char *delims, char **saveptr);
-char						*custom_str(char *str, char *delims);
-/*libft-pars*/
+/*libft*/
 char						*my_strcat(char *dest, const char *src);
 char						*my_strdup(const char *s);
 size_t						my_strspn(const char *s, const char *accept);
@@ -116,6 +110,10 @@ void						*my_realloc(void *ptr, size_t old_size,
 size_t						my_strlen(const char *str);
 int							my_isalnum(int c);
 void						ft_strchr(char *str, char c);
+/*libft*/
+/*func_sup*/
+char						*custom(char *str, char *delims, char **saveptr);
+char						*custom_str(char *str, char *delims);
 
 /*exec*/
 char						**ft_split(char *s, char c);
@@ -123,15 +121,14 @@ char						*ft_substr(char const *s, unsigned int start,
 								size_t len);
 void						addback(ev_list **list, ev_list *new);
 ev_list						*key_value(char *key, char *value);
-void						exec_cmd(t_cmd *cmd, ev_list **env, char **envp);
+void						exec_cmd(t_cmd *cmd, ev_list **env, char **envp, int cnt_pipe);
 int							check_builting(t_cmd *cmd, ev_list **env);
 char						*ft__strdup(char *str);
 ev_list						*key_value(char *key, char *value);
 void						addback(ev_list **list, ev_list *new);
 char						*execve_cmd(t_cmd *cmd, ev_list *env);
-/*dollar*/
-int							checkdollar(char *str);
-
+// void exec_cmd(t_cmd *cmd,ev_list **env,char **envp);
+// char **get_path(ev_list *env);
 int							checkbuilt(t_cmd *cmd, ev_list **env);
 void						parentbuilt(t_cmd *cmd, ev_list **env);
 char						**get_path(ev_list *env, t_cmd *cmd);
@@ -147,26 +144,44 @@ void						herdoc(t_cmd *cmd, ev_list **env);
 // void ft_exit(t_cmd *cmd);
 void						ft_exit(t_cmd *cmd);
 // void ft__exit(t_cmd *cmd);
-int							checkErrer(t_cmd *cmd, ev_list *env);
+int							checkerrer(t_cmd *cmd, ev_list *env);
 char						**get_path(ev_list *env, t_cmd *cmd);
 int							ft_strcmp(char *s1, char *s2);
 char						*access_ve(char **path, t_cmd *cmd);
 char						*ft_join2(char *s1, char *s2);
 char						*ft_join3(char *s1, char *s2);
 void						sighandler(int sig);
-char						**ParsExport(char *input);
+char						**parsexport(char *input);
 char						*get_next_line(int fd);
-void						freeSplitExpo(char **str);
 int							checkbuilt2(t_cmd *cmd, ev_list **env);
 char						*skipeq(char *str, char sep);
-char						**SplitExpo(const char *s, char c);
 int							ft_cherchr(char *str, char c);
 int							_exit_status(char *input);
+int	checkdollar(char *str);
+void	exec_cmd2(t_cmd *cmd, ev_list **env);
+void	pipeline(t_cmd *cmd, int fdd, int fd[2]);
+void	_redirection(t_cmd *cmd);
+void	executecmd(t_cmd *cmd, ev_list **env, char **envp);
+void	_waitpid(int cnt_pipe);
+int	errexit(t_cmd *cmd);
+void	delet_unset(ev_list **env, char *key);
+char	*skipeq(char *str, char sep);
+int	check_double(ev_list **env, char *key, char *value);
+int	checkjoin(char *key);
+void	print_env(ev_list **env, int flag);
+int	checkexpo(char *key, char *value, ev_list **env);
+char	**splitexpo(const char *s, char c);
+void	freesplitexpo(char **str);
+int	cnt_len(char *s, char c);
+int	count_strings2(const char *s, char c);
+char	*allocation_string2(const char *s, char c);
+char	**ft_free2(char **str, size_t i);
 
 /*expand*/
 char						*replace_env_vars(const char *input);
 int							check_quotes(const char *input);
 char						*read_input_with_quotes(void);
+char	*remove_double_quotes(const char *str);
 
 /*free*/
 void						free_command(t_cmd *command);

@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 07:15:39 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/27 09:20:27 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 15:35:37 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ int	main(int ac, char **av, char **envp)
 	char	*continuation;
 	char	*processed_str;
 
-	flag = 0;
 	(void)ac;
 	(void)av;
 	commands = NULL;
@@ -117,6 +116,7 @@ int	main(int ac, char **av, char **envp)
 	signal(SIGQUIT, sighandler);
 	while (1)
 	{
+		flag = 0;
 		str = readline("minishell: ");
 		if (!str)
 			exit(1);
@@ -134,8 +134,8 @@ int	main(int ac, char **av, char **envp)
 			str = concatenate_with_newline(str, continuation);
 			free(continuation);
 		}
-		if (checkdollar(str) == 1)
-			flag = 1;
+		// if (checkdollar(str) == 1)
+		// 	flag = 1;
 		if (_exit_status(str) == 1)
 			flag = 1;
 		processed_str = remove_double_quotes(str);
@@ -151,18 +151,18 @@ int	main(int ac, char **av, char **envp)
 			continue ;
 		}
 		commands = parse_input(replaced_str);
-		commands->Expo = ParsExport(str);
+		commands->expo = parsexport(str);
 		// print_commands(commands);
 		if (flag == 0)
-			exec_cmd(commands, &env, envp);
+			exec_cmd(commands, &env, envp, 0);
 		free(replaced_str);
 		free(str);
-		if (commands->Expo)
+		if (commands->expo)
 		{
 			i = 0;
-			while (commands->Expo[i])
+			while (commands->expo[i])
 				i++;
-			freeSplitExpo(commands->Expo);
+			freesplitexpo(commands->expo);
 		}
 		temp = commands;
 		while (temp)

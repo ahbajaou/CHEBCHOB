@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/26 21:55:05 by ahbajaou          #+#    #+#             */
+/*   Updated: 2023/09/26 21:55:53 by ahbajaou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 void	update_path(ev_list *env, char *old, char *new)
@@ -25,6 +37,7 @@ void	update_path(ev_list *env, char *old, char *new)
 void	_exec_cd(ev_list **env, char *name)
 {
 	char	cwd[256];
+
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		update_path(*env, cwd, NULL);
 	chdir(name);
@@ -49,11 +62,13 @@ char	*_getenv(ev_list **env)
 
 void	ft_cd(t_cmd *cmd, ev_list **env)
 {
+	char	*path;
+
 	if (ft_strcmp("..", cmd->args[0]) == 0)
 		_exec_cd(env, cmd->args[0]);
 	else if (ft_strcmp("~", cmd->args[0]) == 0 || !cmd->args[0])
 	{
-		char *path = _getenv(env);
+		path = _getenv(env);
 		if (!path)
 		{
 			printf("minishell: cd: HOME not set\n");
