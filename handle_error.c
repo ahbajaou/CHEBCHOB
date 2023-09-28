@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 07:16:10 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/27 20:47:51 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/28 09:44:04 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,15 @@ void	error(t_errortype type, t_cmd *cmd)
 	}
 	else if (type == REDIR_ERROR)
 	{
-		if (!strstr(cmd->name, "/bin/"))
+		if (!cmd)
+			{
+				g_exit._exit = 2;
+				write(2, "syntax error near unexpected token `newline'\n", 46);
+				return ;
+			}
+		if (!cmd || !strstr(cmd->name, "/bin/"))
 			return ;
-		if (!strstr(cmd->name, "../") || strstr(cmd->name, "./"))
+		if (!cmd || !strstr(cmd->name, "../") || strstr(cmd->name, "./"))
 			return ;
 		g_exit._exit = 2;
 		write(2, "syntax error near unexpected token `newline'\n", 46);

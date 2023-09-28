@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 07:16:27 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/27 20:52:37 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/28 09:57:17 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,8 @@ char	*replace_env_vars(const char *input)
 
 	required_length = calculate_required_length(input);
 	result = malloc(required_length + 1);
+	// if (strstr(input,"echo"))
+	// 	return ((char *)input);
 	if (!result)
 	{
 		perror("malloc");
@@ -236,17 +238,41 @@ char	*replace_env_vars(const char *input)
 int	checkdollar(char *str)
 {
 	int	i;
+	// int flag;
+	// int start;
 
 	i = 0;
+	// flag = 0;
+	// start = 0;
+	// int end = 0;
 	if (strstr(str, "echo"))
 	{
+		while (str[i] != ' ')
+			i++;
+		i++;
 		while (str[i])
 		{
+			// if (str[i] == '"')
+			// {
+			// 	flag = 1;
+			// 	start = i;
+			// }
+			// while (str[i] != '"')
+			// 	i++;
+			// // printf("--------%c----------\n",str[i]);
+			// if (str[i] == '"' && flag == 1)
+			// {
+			// 	int end = i;
+			// 	char *qt = ft_substr(str,start,end);
+			// 	printf("%s\n",qt);
+			// }
 			if (ft_cherchr(str, '"') == 1 && ft_cherchr(str, '|') == 1)
 			{
 				ft_strchr(str, '"');
 				return (1);
 			}
+			
+			// printf("%c",str[i]);
 			i++;
 		}
 	}

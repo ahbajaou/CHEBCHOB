@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 20:50:38 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/27 20:43:58 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/28 09:57:48 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ void	exec_cmd(t_cmd *cmd, t_list **env, char **envp, int cnt_pipe)
 		pipe_fork(cmd, env, fd);
 		if (cmd->pid == 0)
 		{
-			pipeline(cmd, fdd, fd);
 			_redirection(cmd);
+			pipeline(cmd, fdd, fd);
 			close(fd[0]);
 			executecmd(cmd, env, envp);
 			exit(0);

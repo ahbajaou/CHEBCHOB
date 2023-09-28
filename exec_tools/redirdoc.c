@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 18:09:55 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/27 21:16:22 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/28 09:09:13 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	herdoc(t_cmd *cmd)
 		fd = 1;
 	if (cmd->redirections->redirection_type == REDIR_HEREDOC)
 	{
-		signal(SIGQUIT, SIG_DFL);
+		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, SIG_DFL);
 		herdoc2(cmd, fd, open_file, file_name);
 		if (cmd->redirections->next)
@@ -90,5 +90,7 @@ void	herdoc(t_cmd *cmd)
 		dup2(open_file, STDIN_FILENO);
 		close(open_file);
 		unlink(file_name);
+		free(cmd->redirections->filename);
+		cmd->redirections->filename = NULL;
 	}
 }

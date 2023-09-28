@@ -6,57 +6,13 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 07:15:39 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/27 20:58:34 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/28 10:01:11 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 extern struct t_global_status	g_exit;
-
-t_list	*_env(char **envp)
-{
-	t_list	*env;
-	char	**tmp;
-	int		i;
-
-	env = NULL;
-	tmp = NULL;
-	i = 0;
-	while (envp[i])
-	{
-		tmp = ft_split(envp[i], '=');
-		addback(&env, key_value(tmp[0], tmp[1]));
-		free4free(tmp);
-		free(tmp);
-		i++;
-	}
-	return (env);
-}
-
-void	sighandler(int sig)
-{
-	if (sig == SIGINT)
-	{
-		g_exit._exit = 130;
-		printf("\n");
-		printf("minishell: ");
-	}
-}
-
-int	ft_cherchr(char *str, char c)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-			return (1);
-		i++;
-	}
-	return (0);
-}
 
 char	*concatenate_with_newline(char *old_str, char *continuation)
 {
@@ -134,8 +90,8 @@ int	main(int ac, char **av, char **envp)
 			str = concatenate_with_newline(str, continuation);
 			free(continuation);
 		}
-		// if (checkdollar(str) == 1)
-		// 	flag = 1;
+		if (checkdollar(str) == 1)
+			flag = 1;
 		if (_exit_status(str) == 1)
 			flag = 1;
 		processed_str = remove_double_quotes(str);

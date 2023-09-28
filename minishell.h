@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 07:19:15 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/27 20:50:22 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/28 10:01:06 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,9 @@ int							cnt_len(char *s, char c);
 int							count_strings2(const char *s, char c);
 char						*allocation_string2(const char *s, char c);
 char						**ft_free2(char **str, size_t i);
+t_list	*_env(char **envp);
+int	ft_cherchr(char *str, char c);
+void	sighandler(int sig);
 char						*ft_substr(char const *s, unsigned int start, size_t len);
 
 /*expand*/
