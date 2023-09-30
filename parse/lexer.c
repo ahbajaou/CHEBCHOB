@@ -6,11 +6,11 @@
 /*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 03:52:41 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/27 04:15:24 by bel-kase         ###   ########.fr       */
+/*   Updated: 2023/09/29 23:27:39 by bel-kase         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*custom(char *str, char *delims, char **saveptr)
 {

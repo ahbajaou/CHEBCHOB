@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 18:09:55 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/28 09:09:13 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/30 01:18:55 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	redir(t_cmd *cmd)
 	if (cmd->redirections->redirection_type == REDIR_APPEND)
 	{
 		fdd = open(cmd->redirections->filename, O_CREAT | O_RDWR
-			| O_APPEND, 0644);
+				| O_APPEND, 0644);
 		dup2(fdd, STDOUT_FILENO);
 		close(fdd);
 	}
@@ -44,6 +44,8 @@ void	herdoc2(t_cmd *cmd, int fd, int open_file, char *file_name)
 	char	*temp;
 	char	*line;
 
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, SIG_DFL);
 	temp = get_next_line(fd);
 	if (!temp)
 		return ;
@@ -81,8 +83,6 @@ void	herdoc(t_cmd *cmd)
 		fd = 1;
 	if (cmd->redirections->redirection_type == REDIR_HEREDOC)
 	{
-		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, SIG_DFL);
 		herdoc2(cmd, fd, open_file, file_name);
 		if (cmd->redirections->next)
 			return ;
