@@ -6,11 +6,11 @@
 /*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 03:53:25 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/29 23:25:39 by bel-kase         ###   ########.fr       */
+/*   Updated: 2023/09/27 04:15:00 by bel-kase         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 int	my_isalnum(int c)
 {
@@ -59,9 +59,12 @@ void	*my_realloc(void *ptr, size_t old_size, size_t new_size)
 		copy_size = old_size;
 	else
 		copy_size = new_size;
-	i = -1;
-	while (++i < copy_size)
+	i = 0;
+	while (i < copy_size)
+	{
 		((char *)new_ptr)[i] = ((char *)ptr)[i];
+		i++;
+	}
 	free(ptr);
 	return (new_ptr);
 }
@@ -85,3 +88,4 @@ void	ft_strchr(char *str, char c)
 		i++;
 	}
 }
+

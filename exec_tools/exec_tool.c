@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 20:59:27 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/30 00:46:56 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/28 09:00:13 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	exec_cmd2(t_cmd *cmd, t_list **env)
 
 void	pipeline(t_cmd *cmd, int fdd, int fd[2])
 {
-	sigchild();
 	if (fdd != 0)
 	{
 		dup2(fdd, STDIN_FILENO);

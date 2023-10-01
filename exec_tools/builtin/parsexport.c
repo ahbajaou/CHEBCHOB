@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 13:45:26 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/30 02:39:13 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 18:01:29 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,6 @@ char	**parsexport(char *input)
 
 	i = 0;
 	spl = NULL;
-	if (!input)
-		return (NULL);
 	if (strstr(input, "export"))
 	{
 		while (input[i] != ' ' && input[i] != '\0')

@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 02:36:58 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/30 02:01:45 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/27 20:50:41 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,5 @@ char	*execve_cmd(t_cmd *cmd, t_list *env)
 			return (NULL);
 		return (NULL);
 	}
-	if (!cmd || ft_cherchr(cmd->name, '?') || ft_cherchr(cmd->name, '/'))
-		error(ERROR_CNF, cmd);
 	return (p);
 }

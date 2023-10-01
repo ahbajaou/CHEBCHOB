@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   power_free.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kase <bel-kase@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 03:58:48 by bel-kase          #+#    #+#             */
-/*   Updated: 2023/09/29 23:25:59 by bel-kase         ###   ########.fr       */
+/*   Updated: 2023/09/27 10:00:52 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 void	free4free(char **tmp)
 {
@@ -71,7 +71,7 @@ void	free_command(t_cmd *command)
 {
 	int	i;
 
-	i = -1;
+	i = 0;
 	if (!command)
 		return ;
 	if (command->name)
@@ -79,10 +79,11 @@ void	free_command(t_cmd *command)
 		free(command->name);
 		command->name = NULL;
 	}
-	while (command->args && ++i < command->arg_count)
+	while (command->args && i < command->arg_count)
 	{
 		if (command->args[i])
 			free(command->args[i]);
+		i++;
 	}
 	if (command->args)
 	{

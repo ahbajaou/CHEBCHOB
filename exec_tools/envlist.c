@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 09:59:37 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/30 01:13:53 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/28 10:01:22 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ int	ft_cherchr(char *str, char c)
 	int	i;
 
 	i = 0;
-	if (!str)
-		return (0);
 	while (str[i])
 	{
 		if (str[i] == c)

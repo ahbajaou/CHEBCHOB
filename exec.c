@@ -6,11 +6,11 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 20:50:38 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/09/30 01:18:02 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/09/28 09:57:48 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 t_global_status	g_exit;
 
@@ -22,7 +22,6 @@ void	_close(int fdd)
 
 void	pipe_fork(t_cmd *cmd, t_list **env, int fd[2])
 {
-	sigcmd();
 	exec_cmd2(cmd, env);
 	if (pipe(fd) == -1)
 		perror("pipe");
@@ -56,9 +55,9 @@ void	exec_cmd(t_cmd *cmd, t_list **env, char **envp, int cnt_pipe)
 		pipe_fork(cmd, env, fd);
 		if (cmd->pid == 0)
 		{
+			_redirection(cmd);
 			pipeline(cmd, fdd, fd);
 			close(fd[0]);
-			_redirection(cmd);
 			executecmd(cmd, env, envp);
 			exit(0);
 		}
